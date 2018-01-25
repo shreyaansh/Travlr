@@ -2,3 +2,4 @@ venv
 *.pyc
 staticfiles
 .ev
+static/node_modules
