@@ -2,6 +2,9 @@ import React from "react";
 
 export default class App extends React.Component {
 	render() {
-		return <p> Hello React World! </p>;
+		return (
+			<div><h1>🏨 Travlr ✈️ </h1></div>
+		);
 	}
 }
+
