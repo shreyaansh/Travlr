@@ -21,6 +21,25 @@
     </div>
     </nav>
 
+    <!-- Feedback Form -->
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large blue-grey darken-3 modal-trigger" href="#modal1">
+            <i class="large material-icons">message</i>
+        </a>
+    </div>
+
+    <!-- Feedback Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Leave us some Feedback!</h4>
+            <textarea id="feedback_input"></textarea>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Send</a>
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+
     <!-- Trip Info -->
     <div class="row" id="main_form">
         <div class="col s12 m6">
@@ -59,6 +78,33 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="page-footer blue">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Travlr</h5>
+                    <p class="grey-text text-lighten-4">Need Help? Email us with your issues</p>
+                    <a href="mailto:travlr@gmail.com" class="btn blue-grey darken-3">Email Us</a>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">SiteMap</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                &copy 2018 Copyright Travlr
+            </div>
+        </div>
+    </footer>
+
     <script>
         function add_stop_field() {
             var parent_div = document.getElementById('stop_fields');
@@ -81,13 +127,17 @@
             var parent_div = document.getElementById('stop_fields');
             parent_div.removeChild(field.parentNode.parentNode);
         }
+
+        (function($){
+            $(function(){
+
+                $('.modal').modal();
+
+            }); // end of document ready
+        })(jQuery); // end of jQuery name space
+
     </script>
 
-
-
-    <div class="container" >
-
-    </div>
 
 </body>
 </html>

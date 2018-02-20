@@ -2,3 +2,8 @@
     background-image: url("assets/main_banner.jpg");
     background-position-y: -180px;
 }
+
+#feedback_input {
+    height: 150px;
+    border: dotted;
+}
