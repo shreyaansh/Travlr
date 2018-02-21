@@ -4,8 +4,9 @@ import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
 
-import goToLogin from '../actions/action_select_login'
-import goToMain from '../actions/action_select_main'
+import goToLogin from '../actions/action_select_login';
+import goToMain from '../actions/action_select_main';
+import postUserInfo from '../actions/action_post_user_info';
 
 const clientId = "";
 
@@ -30,6 +31,7 @@ class App extends React.Component {
 		if(response) {
 			localStorage.setItem('currentUser', JSON.stringify(response));
 			this.setState({currentUser: JSON.parse(localStorage.getItem('currentUser'))});
+			this.props.postUserInfo(response.getAuthResponse().id_token);
 		}
 		else {
 			console.log("Error: googleLogin@App.jsx");
@@ -96,7 +98,7 @@ const mapStateToProps = ({ centralReducer }) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({goToLogin, goToMain}, dispatch);
+	return bindActionCreators({goToLogin, goToMain, postUserInfo}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
