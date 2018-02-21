@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import Mainpage from './Mainpage';
 
 import goToLogin from '../actions/action_select_login'
 import goToMain from '../actions/action_select_main'
@@ -71,7 +72,13 @@ class App extends React.Component {
 				/>
 
 			</div>
+
+
 		);
+
+		// return (
+		// 	<Mainpage />
+		// );
 	}
 
 	renderSelector() {
@@ -82,7 +89,7 @@ class App extends React.Component {
 		}
 		else if (this.props.renderer == 'PAGE_RENDER_CHANGE_MAIN') {
 			return (
-				<DummyMain />
+				<Mainpage />
 			);
 		}
 	}
