@@ -7,6 +7,7 @@ import { GoogleLogout } from 'react-google-login';
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
 import postUserInfo from '../actions/action_post_user_info';
+import constants from '../../../constants/constants';
 
 const clientId = "";
 
@@ -26,8 +27,6 @@ class App extends React.Component {
 	}
 
 	googleLogin(response) {
-		console.log("logged in");
-		console.log(response);
 		if(response) {
 			localStorage.setItem('currentUser', JSON.stringify(response));
 			this.setState({currentUser: JSON.parse(localStorage.getItem('currentUser'))});
@@ -61,7 +60,7 @@ class App extends React.Component {
 				<hr />
 				<h5> Logged in as {this.nameHandler()}.</h5>
 				<GoogleLogin
-					clientId="110941707391-lin5grtvjtedoudnpe5p37tnbq7f3qkd.apps.googleusercontent.com"
+					clientId={constants.clientId}
 					buttonText="Sign-in with Google"
 					onSuccess={this.googleLogin}
 					onFailure={this.googleLogin}

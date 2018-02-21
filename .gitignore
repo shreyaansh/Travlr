@@ -3,3 +3,4 @@ venv
 staticfiles
 .ev
 static/node_modules
+constants/*.pyc
