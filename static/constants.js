@@ -1,3 +1,3 @@
 export default {
-    routeUrl: "localhost:5000/"
+				routeUrl: "http://localhost:5000/"
 }
