@@ -11,9 +11,17 @@ app = Flask(__name__, static_folder="./static/dist",
 def index():
     return render_template("index.html")
 
-@app.route("/hello")
-def hello():
-    return "Hello World"
+@app.route('/assets/<path:path>')
+def send_assets(path):
+    print("Path is here: ")
+    print path
+    return send_from_directory('static/assets', path)
+
+@app.route('/css/<path:path>')
+def send_css(path):
+    print("Path is here: ")
+    print path
+    return send_from_directory('static/css', path)
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
