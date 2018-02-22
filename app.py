@@ -3,6 +3,9 @@ from flask import Flask, render_template, jsonify, request
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from constants import constants
+from weather import Weather, Unit
+
+weather = Weather(unit=Unit.CELSIUS)
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -14,6 +17,13 @@ def index():
 @app.route("/hello")
 def hello():
     return "Hello World"
+
+@app.route("/weather/<city>/<date>")
+def weather(city, date):
+    location = weather.lookup_by_location('dublin')
+    condition = location.condition()
+    print(condition.text())
+    return "" + city + " " + date
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
