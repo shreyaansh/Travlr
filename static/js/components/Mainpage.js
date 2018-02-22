@@ -6,7 +6,7 @@ const Mainpage = (props) => {
             <div className="row" id="main_form">
                 <div className="col s12 m4">
                     <div className="card blue-grey darken-4">
-                        <div className="card-content white-text">
+                        <div className="card-content white-text" id="form_div">
                             <span className="card-title">What's your plan?</span>
 
                             <div className="input-field">
@@ -33,7 +33,7 @@ const Mainpage = (props) => {
 
                         </div>
                         <div className="card-action orange accent-4">
-                            <a href="#" className="white-text">Generate Itinerary</a>
+                            <a onClick={getFormData} className="white-text">Generate Itinerary</a>
                         </div>
                     </div>
                 </div>
@@ -83,6 +83,25 @@ function add_stop_field() {
     stop_field_div.appendChild(remove_btn);
 
     parent_div.appendChild(stop_field_div);
+}
+
+function getFormData() {
+    var form_div = Array.from($("#form_div input"));
+    var stops = [];
+    var form_data = {};
+
+    form_div.forEach(function(input){
+        if(input.id === "stop_location")
+            stops.push(input.value);
+        else {
+            form_data[input.id] = input.value;
+        }
+    });
+
+    form_data['stops'] = stops;
+
+    console.log(form_data)
+    // return form_data;
 }
 
 export default Mainpage;
