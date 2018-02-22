@@ -50,7 +50,7 @@ class App extends React.Component {
 		if( this.state.currentUser && this.state.currentUser.w3) {
 			return this.state.currentUser.w3.ig;
 		}
-		else return ""
+		else return null;
 	}
 
 	navProps() {

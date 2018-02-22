@@ -8,7 +8,7 @@ class Navbar extends React.Component {
     
     constructor (props) {
         super(props);
-        console.log(this.props.nameHandler);
+        console.log(this.props.navProps.nameHandler);
     }
 
     render() {
@@ -22,19 +22,19 @@ class Navbar extends React.Component {
                     <li><a href="#">Sass</a></li>
                     <li><a href="#">Components</a></li>
                     <li>
-                    {this.props.nameHandler
+                    {!this.props.navProps.nameHandler
                         
                         ?
                             <GoogleLogin
                                 clientId="110941707391-lin5grtvjtedoudnpe5p37tnbq7f3qkd.apps.googleusercontent.com"
                                 buttonText="Sign-in with Google"
-                                onSuccess={this.props.login}
-                                onFailure={this.props.login}
+                                onSuccess={this.props.navProps.login}
+                                onFailure={this.props.navProps.login}
                             />
                         : 
                             <GoogleLogout
-                                buttonText={"Logout of " + this.props.nameHandler}
-                                onLogoutSuccess={this.props.logout}
+                                buttonText={"Logout of " + this.props.navProps.nameHandler}
+                                onLogoutSuccess={this.props.navProps.logout}
                             />
                     }
                     </li>
