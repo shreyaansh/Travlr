@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
@@ -45,6 +45,23 @@ class Navbar extends React.Component {
             <ul className="sidenav" id="mobile-demo">
                 <li><a href="#">Sass</a></li>
                 <li><a href="#">Components</a></li>
+                <li>
+                    {!this.props.navProps.nameHandler
+
+                        ?
+                        <GoogleLogin
+                            clientId="110941707391-lin5grtvjtedoudnpe5p37tnbq7f3qkd.apps.googleusercontent.com"
+                            buttonText="Sign-in with Google"
+                            onSuccess={this.props.navProps.login}
+                            onFailure={this.props.navProps.login}
+                        />
+                        :
+                        <GoogleLogout
+                            buttonText={"Logout of " + this.props.navProps.nameHandler}
+                            onLogoutSuccess={this.props.navProps.logout}
+                        />
+                    }
+                </li>
             </ul>
           </div>
         );

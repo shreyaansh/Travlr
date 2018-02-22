@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const Mainpage = (props) => {
     return (
@@ -7,7 +7,8 @@ const Mainpage = (props) => {
                 <div className="col s12 m4">
                     <div className="card blue-grey darken-4">
                         <div className="card-content white-text" id="form_div">
-                            <span className="card-title">What's your plan?</span>
+                            <span id="form_user_name">Hi, {props.nameProp}</span>
+                            <span className="card-title">Let's plan your trip.</span>
 
                             <div className="input-field">
                                 <input id="from_location" type="text"/>

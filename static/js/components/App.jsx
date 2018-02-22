@@ -91,7 +91,7 @@ class App extends React.Component {
 		return (
 			<div>
 				<Navbar navProps={this.navProps()}/>
-				<Mainpage />
+				<Mainpage nameProp={this.nameHandler()} />
 				<Footer />
 			</div>
 		);
