@@ -16,7 +16,7 @@ class Navbar extends React.Component {
             <div className="navbar-fixed">
                 <nav className="black">
                 <div className="nav-wrapper">
-                <a href="#!" className="brand-logo"><img src="../../assets/travlr_logo_cropped_small.png" /></a>
+                <a href="#!" className="brand-logo"><img src="/assets/travlr_logo_cropped_small.png" /></a>
                 <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
                 <ul className="right hide-on-med-and-down">
                     <li><a href="#">Sass</a></li>

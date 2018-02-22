@@ -42,42 +42,42 @@ const Mainpage = (props) => {
 
             <div className="row">
                 <div className="col s12 m6">
-                    <img
-                        className="responsive-img"
-                        src="../assets/travel_about_main.jpeg"
-                        alt="Travel Anywhere"/>
-                </div>
-                <div className="col s12 m6">
-                    <span id="hero_line" className="center-align">TRAVEL MADE EASY</span>
-                    <p>Creating and planning a trip requires quite a bit of effort. Looking at
-                        places to stay in, attractions and events to go visit, planning packing
-                        according to the weather at the time of visit at the locations and many other
-                        things. We simplify a lot of the itinerary creation process for you!.</p>
-                    <blockquote>
-                        <ul id="hero_steps">
-                            <li>Enter Locations</li>
-                            <li>Select Hotel and Flight Preferences</li>
-                            <li>Generate Itinerary!</li>
-                        </ul>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-    );
+						<img
+								className="responsive-img"
+								src="/assets/travel_about_main.jpeg"
+								alt="Travel Anywhere"/>
+				</div>
+				<div className="col s12 m6">
+						<span id="hero_line" className="center-align">TRAVEL MADE EASY</span>
+						<p>Creating and planning a trip requires quite a bit of effort. Looking at
+								places to stay in, attractions and events to go visit, planning packing
+								according to the weather at the time of visit at the locations and many other
+								things. We simplify a lot of the itinerary creation process for you!.</p>
+						<blockquote>
+								<ul id="hero_steps">
+										<li>Enter Locations</li>
+										<li>Select Hotel and Flight Preferences</li>
+										<li>Generate Itinerary!</li>
+								</ul>
+						</blockquote>
+				</div>
+		</div>
+</div>
+);
 }
 
 function add_stop_field() {
-    var parent_div = document.getElementById('stop_fields');
-    var stop_field_div = document.createElement('div');
-    stop_field_div.className = "row";
-    var new_stop = document.createElement('div');
-    new_stop.className = 'input-field col s10';
-    new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
-            "p</label>";
+var parent_div = document.getElementById('stop_fields');
+var stop_field_div = document.createElement('div');
+stop_field_div.className = "row";
+var new_stop = document.createElement('div');
+new_stop.className = 'input-field col s10';
+new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
+		"p</label>";
 
-    var remove_btn = document.createElement('div');
-    remove_btn.className = "col s2";
-    remove_btn.innerHTML = "<a className=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
+var remove_btn = document.createElement('div');
+remove_btn.className = "col s2";
+remove_btn.innerHTML = "<a className=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
             "top_field(this)\"><i className=\"material-icons left\">clear</i></a>";
 
     stop_field_div.appendChild(new_stop);
