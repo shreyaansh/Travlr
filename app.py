@@ -5,7 +5,7 @@ from google.auth.transport import requests
 from constants import constants
 from weather import Weather, Unit
 
-weather = Weather(unit=Unit.CELSIUS)
+weather = Weather(unit=Unit.FAHRENHEIT)
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -21,9 +21,12 @@ def hello():
 @app.route("/weather/<city>/<date>")
 def getWeather(city, date):
     city.replace("-", " ")
-    lookup = weather.lookup_by_location(city)
-    condition = lookup.condition()
-    return condition.text()
+    location = weather.lookup_by_location(city)
+    forecasts = location.forecast()
+    result = ""
+    for forecast in forecasts:
+        result += forecast.date() + ": " + " (high=" + forecast.high() + ",low=" + forecast.low() + ") " + forecast.text() + "\n<br>"
+    return result
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
