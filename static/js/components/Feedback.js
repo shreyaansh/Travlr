@@ -26,11 +26,10 @@ const Feedback = (props) => {
 }
 
 function getFeedbackData() {
-    debugger;
     var message = document.getElementById('feedback_input').value;
     var userInfo = JSON.parse(localStorage.getItem("currentUser"));
     if(userInfo) {
-        var send_data = JSON.stringify({"type" : "feedback", "message" : message, "email" : userInfo.profileObj.email});
+        var send_data = {"type" : "feedback", "message" : message, "email" : userInfo.profileObj.email};
         axios.post(constants.routeUrl + "feedback", send_data).then(res => {
             console.log(res);
             console.log("FEEDBACK: Submitted", send_data)
