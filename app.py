@@ -19,11 +19,11 @@ def hello():
     return "Hello World"
 
 @app.route("/weather/<city>/<date>")
-def weather(city, date):
-    location = weather.lookup_by_location('dublin')
-    condition = location.condition()
-    print(condition.text())
-    return "" + city + " " + date
+def getWeather(city, date):
+    city.replace("-", " ")
+    lookup = weather.lookup_by_location(city)
+    condition = lookup.condition()
+    return condition.text()
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
