@@ -9,6 +9,7 @@ import Footer from './Footer';
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
 import postUserInfo from '../actions/action_post_user_info';
+import Feedback from "./Feedback";
 
 const clientId = "";
 
@@ -93,6 +94,7 @@ class App extends React.Component {
 		return (
 			<div>
 				<Navbar navProps={this.navProps()}/>
+				<Feedback />
 				<Mainpage nameProp={this.nameHandler()} />
 				<Footer />
 			</div>
