@@ -1,7 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import postUserFeedback from '../actions/action_post_user_feedback';
+import axios from "axios";
+import constants from "../../constants"
 
 const Feedback = (props) => {
     return (
@@ -18,7 +17,7 @@ const Feedback = (props) => {
                     <textarea id="feedback_input"></textarea>
                 </div>
                 <div className="modal-footer">
-                    <a onClick={this.postUserFeedback(getFeedbackData())} className="modal-action modal-close waves-effect waves-green btn-flat">Send</a>
+                    <a onClick={getFeedbackData} className="modal-action modal-close waves-effect waves-green btn-flat">Send</a>
                     <a href="#" className="modal-close waves-effect waves-green btn-flat">Close</a>
                 </div>
             </div>
@@ -27,19 +26,19 @@ const Feedback = (props) => {
 }
 
 function getFeedbackData() {
-    var message = document.getElementById('feedback_input');
-    var send_data = {"type" : "feedback", "message" : message};
-    return send_data;
-}
-
-const mapStateToProps = ({ centralReducer }) => {
-    return ({
-        renderer: centralReducer.renderer
-    });
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({goToLogin, goToMain, postUserInfo}, dispatch);
+    debugger;
+    var message = document.getElementById('feedback_input').value;
+    var userInfo = JSON.parse(localStorage.getItem("currentUser"));
+    if(userInfo) {
+        var send_data = JSON.stringify({"type" : "feedback", "message" : message, "email" : userInfo.profileObj.email});
+        axios.post(constants.routeUrl + "feedback", send_data).then(res => {
+            console.log(res);
+            console.log("FEEDBACK: Submitted", send_data)
+        });
+    }
+    else {
+        console.log('FEEDBACK: No user signed in!')
+    }
 }
 
 export default Feedback;
