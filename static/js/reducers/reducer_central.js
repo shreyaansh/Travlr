@@ -13,6 +13,9 @@ function centralReducer(state = initialState, action) {
             return ({
                 renderer: "main_page"
             });
+        case "POST_USER_INFO":
+            console.log("ACTION: USER INFO POSTED");
+            return state;
         default:
             return state
     }
