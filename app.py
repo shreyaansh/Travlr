@@ -3,9 +3,9 @@ from flask import Flask, render_template, jsonify, request
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from constants import constants
-from weather import Weather, Unit
-
-weather = Weather(unit=Unit.FAHRENHEIT)
+from geopy.geocoders import Nominatim
+import forecastio
+import datetime
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -18,15 +18,14 @@ def index():
 def hello():
     return "Hello World"
 
-@app.route("/weather/<city>/<date>")
-def getWeather(city, date):
+@app.route("/weather/<city>/<year>/<month>/<day>")
+def getWeather(city, year, month, day):
     city.replace("-", " ")
-    location = weather.lookup_by_location(city)
-    forecasts = location.forecast()
-    result = ""
-    for forecast in forecasts:
-        result += forecast.date() + ": " + " (high=" + forecast.high() + ",low=" + forecast.low() + ") " + forecast.text() + "\n<br>"
-    return result
+    geolocator = Nominatim()
+    location = geolocator.geocode(city)
+    mydate = datetime.datetime(int(year), int(month), int(day))
+    forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
+    return str(forecast.currently()).replace("<", "").replace(">", "")
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
