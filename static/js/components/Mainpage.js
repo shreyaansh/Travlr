@@ -27,10 +27,12 @@ const Mainpage = (props) => {
 
                             <div className="row">
                                 <div className="input-field col s6">
-                                    <input id="from_date" type="date"/>
+                                    <input id="from_date" type="text" className="datepicker"/>
+                                    <label htmlFor="from_date">From?</label>
                                 </div>
                                 <div className="input-field col s6">
-                                    <input id="to_date" type="date"/>
+                                    <input id="to_date" type="text" className="datepicker"/>
+                                    <label htmlFor="to_date">To?</label>
                                 </div>
                             </div>
 
