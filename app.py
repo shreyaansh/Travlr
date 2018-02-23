@@ -7,10 +7,11 @@ from google.auth.transport import requests
 from googleplaces import GooglePlaces, types, lang
 from constants import constants
 from datetime import datetime
-#from weather import Weather, Unit
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
+from geopy.geocoders import Nominatim
+import forecastio
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -87,7 +88,6 @@ class ItinContents(db.Model):
 
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
-#weather = Weather(unit=Unit.FAHRENHEIT)
 
 @app.route('/')
 def index():
@@ -100,6 +100,15 @@ def send_assets(path):
 @app.route('/css/<path:path>')
 def send_css(path):
     return send_from_directory('static/css', path)
+
+@app.route("/weather/<city>/<year>/<month>/<day>")
+def getWeather(city, year, month, day):
+    city.replace("-", " ")
+    geolocator = Nominatim()
+    location = geolocator.geocode(city)
+    mydate = datetime.datetime(int(year), int(month), int(day))
+    forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
+    return str(forecast.currently()).replace("<", "").replace(">", "")
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
@@ -232,22 +241,13 @@ def getTravelData():
     data[start_dest]['distance_to_next'] = "N/a"
     data[end_dest]['hotels'] = fetch_hotels(end_dest)
 
-    #print(data)
+    print(data)
 
     ret_token = { "status" : "Places submitted" }
 
     # Return data jsonified here
     return jsonify(ret_token)
 
-@app.route("/weather/<city>/<date>")
-def getWeather(city, date):
-    city.replace("-", " ")
-    location = weather.lookup_by_location(city)
-    forecasts = location.forecast()
-    result = ""
-    for forecast in forecasts:
-        result += forecast.date() + ": " + " (high=" + forecast.high() + ",low=" + forecast.low() + ") " + forecast.text() + "\n<br>"
-    return result
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
