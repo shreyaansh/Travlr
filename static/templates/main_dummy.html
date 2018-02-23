@@ -1,0 +1,168 @@
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    <!-- Google -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Anton" rel="stylesheet">
+
+    <link rel="stylesheet" href="../style.css">
+    <title>Travlr ✈️ </title>
+</head>
+<body>
+    
+    <nav style="background-color:#242424; height:75px">
+    <div class="container">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down" >
+            <li style="margin-left:10px"><a href=""><i class="material-icons left">send</i>Start</a></li>
+            <li style="margin-left:10px"><a href=""><i class="material-icons left">account_circle</i>Profile</a></li>
+        </ul>
+    </div>
+    </div>
+    </nav>
+
+    <!-- Feedback Form -->
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large blue-grey darken-3 modal-trigger" href="#modal1">
+            <i class="large material-icons">message</i>
+        </a>
+    </div>
+
+    <!-- Feedback Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Leave us some Feedback!</h4>
+            <textarea id="feedback_input"></textarea>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Send</a>
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+
+    <!-- Trip Info -->
+    <div class="row" id="main_form">
+        <div class="col s12 m4">
+            <div class="card blue-grey darken-4">
+                <div class="card-content white-text">
+                    <span class="card-title">What's your plan?</span>
+
+                    <div class="input-field">
+                        <input id="from_location" type="text">
+                        <label for="from_location">Where From?</label>
+                    </div>
+                    <div id="stop_fields"></div>
+                    <a class="btn blue-grey lighten-1" id="add_stop" onclick="add_stop_field()"><i class="material-icons left">add</i> Add Stop</a>
+                    <div class="input-field">
+                        <input id="to_location" type="text">
+                        <label for="to_location">Where To?</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="from_date" type="date">
+                            <!--<label for="from_date">From?</label>-->
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="to_date"type="date">
+                            <!--<label for="to_date">To?</label>-->
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card-action orange accent-4">
+                    <a href="#" class="white-text">Generate Itinerary</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <div class="col s12 m6">
+            <img class="responsive-img" src="../assets/travel_about_main.jpeg" alt="Travel Anywhere">
+        </div>
+        <div class="col s12 m6">
+            <span id="hero_line" class="center-align">TRAVEL MADE EASY</span>
+            <p>Creating and planning a trip requires quite a bit of effort.
+                Looking at places to stay in, attractions and events to go visit, planning packing according to the weather at the time of visit at the locations and many other things.
+                We simplify a lot of the itinerary creation process for you!.</p>
+            <blockquote>
+                <ul id="hero_steps">
+                    <li>Enter Locations</li>
+                    <li>Select Hotel and Flight Preferences</li>
+                    <li>Generate Itinerary!</li>
+                </ul>
+            </blockquote>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer blue">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Travlr</h5>
+                    <p class="grey-text text-lighten-4">Need Help? Email us with your issues</p>
+                    <a href="mailto:travlr@gmail.com" class="btn blue-grey darken-3">Email Us</a>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">SiteMap</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                &copy 2018 Copyright Travlr
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function add_stop_field() {
+            var parent_div = document.getElementById('stop_fields');
+            var stop_field_div = document.createElement('div');
+            stop_field_div.className="row";
+            var new_stop = document.createElement('div');
+            new_stop.className = 'input-field col s10';
+            new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Stop</label>";
+
+            var remove_btn = document.createElement('div');
+            remove_btn.className = "col s2";
+            remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_stop_field(this)\"><i class=\"material-icons left\">clear</i></a>";
+
+            stop_field_div.appendChild(new_stop);
+            stop_field_div.appendChild(remove_btn);
+
+            parent_div.appendChild(stop_field_div);
+        }
+        function remove_stop_field(field) {
+            var parent_div = document.getElementById('stop_fields');
+            parent_div.removeChild(field.parentNode.parentNode);
+        }
+
+        (function($){
+            $(function(){
+
+                $('.modal').modal();
+
+            }); // end of document ready
+        })(jQuery); // end of jQuery name space
+
+    </script>
+
+
+</body>
+</html>

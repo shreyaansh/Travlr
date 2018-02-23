@@ -1,13 +1,16 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { GoogleLogin } from 'react-google-login';
-import { GoogleLogout } from 'react-google-login';
+
+import Mainpage from './Mainpage';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
 import postUserInfo from '../actions/action_post_user_info';
 import constants from '../../../constants/constants';
+import Feedback from "./Feedback";
 
 const clientId = "";
 
@@ -23,6 +26,8 @@ class App extends React.Component {
 		this.googleLogin = this.googleLogin.bind(this);
 		this.googleLogout = this.googleLogout.bind(this);
 		this.nameHandler = this.nameHandler.bind(this);
+		this.navProps = this.navProps.bind(this);		
+		
 
 	}
 
@@ -47,30 +52,25 @@ class App extends React.Component {
 		if( this.state.currentUser && this.state.currentUser.w3) {
 			return this.state.currentUser.w3.ig;
 		}
-		else return ""
+		else return null;
+	}
+
+	navProps() {
+		return ({
+			userInfo: this.state.currentUser,
+			login: this.googleLogin,
+			logout: this.googleLogout,
+			nameHandler: this.nameHandler()
+		});
 	}
 
 	render() {
-
 		return (
 			<div>
-				
-				<h2>🏨 Travlr ✈️</h2>
-
-				<hr />
-				<h5> Logged in as {this.nameHandler()}.</h5>
-				<GoogleLogin
-					clientId={constants.clientId}
-					buttonText="Sign-in with Google"
-					onSuccess={this.googleLogin}
-					onFailure={this.googleLogin}
-				/>
-
-				<GoogleLogout
-					buttonText="Logout"
-					onLogoutSuccess={this.googleLogout}
-				/>
-
+				<Navbar navProps={this.navProps()}/>
+				<Mainpage nameProp={this.nameHandler()} />
+				<Footer />
+				<Feedback />
 			</div>
 		);
 	}
@@ -83,7 +83,7 @@ class App extends React.Component {
 		}
 		else if (this.props.renderer == 'PAGE_RENDER_CHANGE_MAIN') {
 			return (
-				<DummyMain />
+			 <div></div>
 			);
 		}
 	}

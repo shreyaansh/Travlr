@@ -1,0 +1,18 @@
+#main_form {
+    background-image: url("assets/main_banner.jpg");
+    background-position-y: -180px;
+}
+
+#feedback_input {
+    height: 150px;
+    border: dotted;
+}
+
+#hero_line {
+    font-family: 'Anton', sans-serif;
+    font-size: 50px;
+}
+#hero_steps {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+}

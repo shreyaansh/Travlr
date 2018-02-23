@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from constants import constants
@@ -14,13 +14,11 @@ def index():
 @app.route('/assets/<path:path>')
 def send_assets(path):
     print("Path is here: ")
-    print path
     return send_from_directory('static/assets', path)
 
 @app.route('/css/<path:path>')
 def send_css(path):
     print("Path is here: ")
-    print path
     return send_from_directory('static/css', path)
 
 @app.route('/authenticate', methods=['POST'])
@@ -51,9 +49,18 @@ def getFeedback():
     print(feedback_token)
 
     ret_token = { "status" : "Feedback submitted" }
-    
+
+    return jsonify(ret_token)
+
+@app.route('/travel-form', methods=['POST'])
+def getTravelData():
+    token = request.get_json()
+    print(token)
+
+    ret_token = { "status" : "Feedback submitted" }
+
     return jsonify(ret_token)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run("0.0.0.0", port)
+    app.run("localhost", port)

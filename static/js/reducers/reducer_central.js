@@ -1,5 +1,5 @@
 const initialState = {
-    renderer: "login_page"
+    renderer: "main_page"
 }
 
 function centralReducer(state = initialState, action) {
