@@ -19,12 +19,10 @@ def index():
 
 @app.route('/assets/<path:path>')
 def send_assets(path):
-    print("Path is here: ")
     return send_from_directory('static/assets', path)
 
 @app.route('/css/<path:path>')
 def send_css(path):
-    print("Path is here: ")
     return send_from_directory('static/css', path)
 
 @app.route('/authenticate', methods=['POST'])
@@ -56,11 +54,11 @@ def fetch_places():
 
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
     for place in query_result.places:
-        print place.name
+        print(place.name)
         
         place.get_details()
 
-        print place.details
+        print(place.details)
 
     return jsonify({ "status" : "success" })
 
