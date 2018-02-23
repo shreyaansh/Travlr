@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from "axios";
+import constants from "../../constants"
 
 const Mainpage = (props) => {
     return (
@@ -101,8 +103,20 @@ function getFormData() {
 
     form_data['stops'] = stops;
 
-    console.log(form_data)
-    // return form_data;
+    var userInfo = JSON.parse(localStorage.getItem("currentUser"));
+    form_data['email'] = userInfo.profileObj.email;
+
+    if(userInfo) {
+        axios.post(constants.routeUrl + "travel-form", form_data).then(res => {
+            console.log(res);
+            console.log("FORM_DATA: Submitted", form_data);
+        });
+    }
+    else {
+        console.log('FORM_DATA: No user signed in!');
+    }
+
+
 }
 
 export default Mainpage;

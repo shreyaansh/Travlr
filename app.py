@@ -50,7 +50,16 @@ def getFeedback():
     print(feedback_token)
 
     ret_token = { "status" : "Feedback submitted" }
-    
+
+    return jsonify(ret_token)
+
+@app.route('/travel-form', methods=['POST'])
+def getTravelData():
+    feedback_token = request.get_json()
+    print(feedback_token)
+
+    ret_token = { "status" : "Feedback submitted" }
+
     return jsonify(ret_token)
 
 if __name__ == '__main__':
