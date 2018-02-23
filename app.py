@@ -1,12 +1,13 @@
 import os
 from flask import Flask, render_template, jsonify, request, send_from_directory
 import googlemaps
+import json
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from googleplaces import GooglePlaces, types, lang
 from constants import constants
 from datetime import datetime
-from weather import Weather, Unit
+#from weather import Weather, Unit
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
@@ -86,7 +87,7 @@ class ItinContents(db.Model):
 
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
-weather = Weather(unit=Unit.FAHRENHEIT)
+#weather = Weather(unit=Unit.FAHRENHEIT)
 
 @app.route('/')
 def index():
@@ -138,25 +139,26 @@ def authenticate():
     
     return jsonify(ret_token) 
 
-@app.route("/fetch-places")
-def fetch_places():
-    geocode_result = google_maps.geocode('Chicago, IL')
-    print(geocode_result[0]['geometry']['location'])
+def fetch_hotels(place):
+    geocode_result = google_maps.geocode(place)
+    #print(geocode_result[0]['geometry']['location'])
+    
+    hotels = {}
 
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
+    
     for place in query_result.places:
-        print(place.name)
-        
+        #print(place.name)
         place.get_details()
+        #print(place.details)
+        hotels[place.name] = place.details
 
-        print(place.details)
-
-    return jsonify({ "status" : "success" })
+    return hotels
 
 @app.route('/feedback', methods=['POST'])
 def getFeedback():
     feedback_token = request.get_json()
-    print(feedback_token)
+    #print(feedback_token)
 
     email=feedback_token['email']
     message=feedback_token['message']
@@ -177,8 +179,64 @@ def getTravelData():
     token = request.get_json()
     print(token)
 
-    ret_token = { "status" : "Feedback submitted" }
+    origin = token['from_location']
+    stops = token['stops']
+    destination = token['to_location']
 
+    start_dest = origin
+    end_dest = destination
+
+    #print(start_dest)
+    #print(end_dest)
+
+    data = {}
+
+    stop = 0
+
+    if len(stops) != 0:
+        for i in range(len(stops) + 1):
+            if i == len(stops):
+                end_dest = destination
+                distance_matrix = google_maps.distance_matrix(start_dest, end_dest)
+                #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
+                data[start_dest] = {}
+                data[start_dest]['stop'] = i + 1
+                data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
+                data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+                data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                stop = i + 1
+                break
+            else:
+                end_dest = stops[i]
+            distance_matrix = google_maps.distance_matrix(start_dest, end_dest)
+            #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
+            data[start_dest] = {}
+            data[start_dest]['stop'] = i + 1
+            data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
+            data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+            data[start_dest]['hotels'] = fetch_hotels(start_dest)
+            start_dest = stops[i]
+    else:
+        distance_matrix = google_maps.distance_matrix(origin, destination)
+        #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
+        data[start_dest] = {}
+        data[start_dest]['stop'] = 1
+        data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
+        data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+        data[start_dest]['hotels'] = fetch_hotels(start_dest)
+        stop = 2
+
+    data[end_dest] = {}
+    data[end_dest]['stop'] = stop + 1
+    data[end_dest]['time_to_next'] = "N/a"
+    data[start_dest]['distance_to_next'] = "N/a"
+    data[end_dest]['hotels'] = fetch_hotels(end_dest)
+
+    #print(data)
+
+    ret_token = { "status" : "Places submitted" }
+
+    # Return data jsonified here
     return jsonify(ret_token)
 
 @app.route("/weather/<city>/<date>")
