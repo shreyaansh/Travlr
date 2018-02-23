@@ -6,12 +6,14 @@ from google.auth.transport import requests
 from googleplaces import GooglePlaces, types, lang
 from constants import constants
 from datetime import datetime
+from weather import Weather, Unit
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
 
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
+weather = Weather(unit=Unit.FAHRENHEIT)
 
 @app.route('/')
 def index():
@@ -79,6 +81,16 @@ def getTravelData():
     ret_token = { "status" : "Feedback submitted" }
 
     return jsonify(ret_token)
+
+@app.route("/weather/<city>/<date>")
+def getWeather(city, date):
+    city.replace("-", " ")
+    location = weather.lookup_by_location(city)
+    forecasts = location.forecast()
+    result = ""
+    for forecast in forecasts:
+        result += forecast.date() + ": " + " (high=" + forecast.high() + ",low=" + forecast.low() + ") " + forecast.text() + "\n<br>"
+    return result
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
