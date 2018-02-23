@@ -1,6 +1,6 @@
 #main_form {
-    background-image: url("assets/main_banner.jpg");
-    background-position-y: -180px;
+    background-image: url("/assets/main_banner.jpeg");
+    background-size: cover;
 }
 
 #feedback_input {
@@ -15,4 +15,13 @@
 #hero_steps {
     font-family: 'Anton', sans-serif;
     font-size: 30px;
+}
+#form_user_name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+}
+
+#nav_logo{
+    width: 185px;
+    padding: 10px;
 }
