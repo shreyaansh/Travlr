@@ -6,7 +6,7 @@ const Mainpage = (props) => {
     return (
         <div>
             <div className="row" id="main_form">
-                <div className="col s12 m4">
+                <div className="col s12 m6">
                     <div className="card blue-grey darken-4">
                         <div className="card-content white-text" id="form_div">
                             <span id="form_user_name">Hi, {props.nameProp}</span>
