@@ -162,11 +162,20 @@ def getFeedback():
 
     email=feedback_token['email']
     message=feedback_token['message']
-    #tryal = db.session.query(User).filter(User.email == feedback_token['email']).id
+    #tryal = db.session.query(User).filter(User.email == feedback_token['email']).count()
     #print(tryal)
+
+    #query execution example
+    #sqlq='Select email from "public"."Users"'
+    #result = db.engine.execute(sqlq)
+    #print(result)
+
+    #for row in result:
+    #    print(row)
 
     reg=Feedback(message,email)
     db.session.add(reg)
+    #db.session.add(tryal)
     #db.session.flush()
     db.session.commit()
 
