@@ -11,6 +11,14 @@ class Navbar extends React.Component {
         console.log(this.props.navProps.nameHandler);
     }
 
+    componentDidMount() {
+        var buttons = Array.from($("li button"));
+        buttons.forEach(function (elem) {
+           elem.style.width = 'auto';
+           elem.style.margin = '10px';
+        });
+    }
+
     render() {
         return (
             <div>
