@@ -81,8 +81,8 @@ new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"s
 
 var remove_btn = document.createElement('div');
 remove_btn.className = "col s2";
-remove_btn.innerHTML = "<a className=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
-            "top_field(this)\"><i className=\"material-icons left\">clear</i></a>";
+remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
+            "top_field(this)\"><i class=\"material-icons left\">clear</i></a>";
 
     stop_field_div.appendChild(new_stop);
     stop_field_div.appendChild(remove_btn);

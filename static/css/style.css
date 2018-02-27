@@ -21,6 +21,10 @@
     font-size: 30px;
 }
 
+#form_div input{
+    color: white;
+}
+
 #nav_logo{
     width: 185px;
     padding: 10px;
