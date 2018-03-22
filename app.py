@@ -243,8 +243,7 @@ def getTravelData():
             data[location]['hotels'][hotel] = temp_hotels[location][hotel]
 
     print(data)
-
-
+    
     # Return data jsonified here
     return jsonify(data)
 
