@@ -196,10 +196,10 @@ def getTravelData():
                 data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
                 data[start_dest]['hotels'] = {}
-		data[start_dest]['hotels'] = fetch_hotels(start_dest)
-		temp_hotels[start_dest] = data[start_dest]['hotels']
+                data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                temp_hotels[start_dest] = data[start_dest]['hotels']
                 stop = i + 1
-		break
+                break
             else:
                 end_dest = stops[i]
 
@@ -209,9 +209,9 @@ def getTravelData():
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
             data[start_dest]['hotels'] = {}
-	    data[start_dest]['hotels'] = fetch_hotels(start_dest)
+            data[start_dest]['hotels'] = fetch_hotels(start_dest)
             start_dest = stops[i]
-	    temp_hotels[start_dest] = data[start_dest]['hotels']
+            temp_hotels[start_dest] = data[start_dest]['hotels']
     else:
         distance_matrix = google_maps.distance_matrix(origin, destination)
         data[start_dest] = {}
@@ -219,8 +219,8 @@ def getTravelData():
         data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
         data[start_dest]['hotels'] = {}
-	data[start_dest]['hotels'] = fetch_hotels(start_dest)
-	temp_hotels[start_dest] = data[start_dest]['hotels']
+        data[start_dest]['hotels'] = fetch_hotels(start_dest)
+        temp_hotels[start_dest] = data[start_dest]['hotels']
         stop = 2
 
     data[end_dest] = {}
@@ -233,13 +233,14 @@ def getTravelData():
     
 
     for location in temp_hotels:
-	for hotel in temp_hotels[location]:
-		del temp_hotels[location][hotel]['reviews']
-		del temp_hotels[location][hotel]['geometry']['viewport']
-		temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
-		for coordinate in temp_hotels[location][hotel]['geometry']['location']:
-			temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
-		data[location]['hotels'][hotel] = temp_hotels[location][hotel]
+        for hotel in temp_hotels[location]:
+            del temp_hotels[location][hotel]['reviews']
+            del temp_hotels[location][hotel]['geometry']['viewport']
+            temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
+            for coordinate in temp_hotels[location][hotel]['geometry']['location']:
+                temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
+            
+            data[location]['hotels'][hotel] = temp_hotels[location][hotel]
 
     print(data)
 
