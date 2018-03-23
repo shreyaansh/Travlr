@@ -110,6 +110,10 @@ def getWeather(city, year, month, day):
     forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
     return str(forecast.currently()).replace("<", "").replace(">", "")
 
+@app.route('/events/<city>/<category>/<year>/<month>/<day>')
+def getEvents(city, category, year, month, day):
+    return "City:" + city + " Category:" + category
+
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     token = request.get_json()
