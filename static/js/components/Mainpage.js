@@ -10,11 +10,11 @@ const Mainpage = (props) => {
                     <div className="card blue-grey darken-4">
                         <div className="card-content white-text" id="form_div">
                             <span id="form_user_name">Hi, {props.nameProp}</span>
-                            <span className="card-title">Let's plan your trip.</span>
+                            <span className="card-title">Lets plan your trip.</span>
 
                             <div className="input-field">
                                 <input id="from_location" type="text"/>
-                                <label htmlFor="from_location">Where From?</label>
+                                <label htmlFor="from_location">First Stop</label>
                             </div>
                             <div id="stop_fields"></div>
                             <a className="btn blue-grey lighten-1" id="add_stop" onClick={add_stop_field}>
@@ -22,7 +22,7 @@ const Mainpage = (props) => {
                                 Add Stop</a>
                             <div className="input-field">
                                 <input id="to_location" type="text"/>
-                                <label htmlFor="to_location">Where To?</label>
+                                <label htmlFor="to_location">Last Stop</label>
                             </div>
 
                             <div className="row">
