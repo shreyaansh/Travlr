@@ -12,6 +12,9 @@ from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
 import forecastio
+import simplejson as json
+from sqlalchemy.dialects.postgresql.json import JSON
+import sys
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -80,6 +83,21 @@ class ItinContents(db.Model):
 
     def __repr__(self):
         return '<day %r, slot %r, eventname %r>' % (self.day,self.slot,self.eventname)
+
+
+class TempJSONtable(db.Model):
+    __tablename__="TempJSONtable"
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    location=db.Column(db.String(200))
+    data=db.Column(JSON)
+
+    def __init__(self, location, data):
+        self.location = location
+        self.data = data
+
+    def __repr__(self):
+        return '<location %r, data %r>' % (self.location, self.data)
+
 
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
@@ -254,8 +272,28 @@ def getTravelData():
 
             data[location]['hotels'][hotel] = temp_hotels[location][hotel]
 
-    print(data)
-
+    #print(data)
+    for keys in data:
+        #print(data[keys])
+        for key in data[keys]:
+            print(key)
+        #break
+        if not db.session.query(TempJSONtable).filter(TempJSONtable.location == keys).count():
+            jData = json.dumps(data[keys]["hotels"])
+            reg = TempJSONtable(keys, jData)
+            db.session.add(reg)
+            db.session.commit()
+            print(keys)
+        else:
+            print("Key already exists.")
+            #db.session.query(TempJSONtable).filter(TempJSONtable.location == keys)
+            sqlq='Select data from "public"."TempJSONtable" where location like \'%s\'' %(keys)
+            #print(sqlq)
+            result = db.engine.execute(sqlq)
+            #print(result)
+            for row in result:
+                #print(object_as_dict(row))
+                print(row.data)
     # Return data jsonified here
     return jsonify(data)
 
