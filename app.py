@@ -12,6 +12,7 @@ from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
 import forecastio
+import eventful
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -115,7 +116,7 @@ def getEvents(city, category, year, month, day):
     api = eventful.API('pRWGnf7cxRpF8nmn')
     events = api.call('/events/search', q=category, l=city)
     for event in events['events']['event']:
-        print "%s at %s" % (event['title'], event['venue_name'])
+        print("%s at %s" % (event['title'], event['venue_name']))
     return "City:" + city + " Category:" + category
 
 @app.route('/authenticate', methods=['POST'])
