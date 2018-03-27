@@ -12,19 +12,32 @@ const Mainpage = (props) => {
                             <span id="form_user_name">Hi, {props.nameProp}</span>
                             <span className="card-title">Lets plan your trip.</span>
 
-                            <div className="input-field">
-                                <input id="from_location" type="text"/>
-                                <label htmlFor="from_location">First Stop</label>
+                            <div className="row">
+                                <div className="input-field col s8">
+                                    <input id="from_location" type="text"/>
+                                    <label htmlFor="from_location">First Stop</label>
+                                </div>
+                                <div className="input-field col s4">
+                                    <input id="stop_days" type="text"/>
+                                    <label for="stop_days">Days</label>
+                                </div>                     
                             </div>
+
                             <div id="stop_fields"></div>
                             <a className="btn blue-grey lighten-1" id="add_stop" onClick={add_stop_field}>
                                 <i className="material-icons left">add</i>
                                 Add Stop</a>
-                            <div className="input-field">
-                                <input id="to_location" type="text"/>
-                                <label htmlFor="to_location">Last Stop</label>
-                            </div>
 
+                            <div className="row">
+                                <div className="input-field col s8">
+                                    <input id="to_location" type="text"/>
+                                    <label htmlFor="to_location">Last Stop</label>
+                                </div>
+                                <div className="input-field col s4">
+                                    <input id="stop_days" type="text"/>
+                                    <label for="stop_days">Days</label>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="input-field col s6">
                                     <input id="from_date" type="text" className="datepicker"/>
@@ -74,10 +87,15 @@ function add_stop_field() {
 var parent_div = document.getElementById('stop_fields');
 var stop_field_div = document.createElement('div');
 stop_field_div.className = "row";
+
 var new_stop = document.createElement('div');
-new_stop.className = 'input-field col s10';
+new_stop.className = 'input-field col s8';
 new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
 		"p</label>";
+
+var stop_days = document.createElement('div');
+stop_days.className = 'input-field col s2';
+stop_days.innerHTML = "<input id=\"stop_days\" type=\"text\">\n<label for=\"stop_days\">Days</label>"
 
 var remove_btn = document.createElement('div');
 remove_btn.className = "col s2";
@@ -85,6 +103,7 @@ remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\
             "top_field(this)\"><i class=\"material-icons left\">clear</i></a>";
 
     stop_field_div.appendChild(new_stop);
+    stop_field_div.appendChild(stop_days);
     stop_field_div.appendChild(remove_btn);
 
     parent_div.appendChild(stop_field_div);
