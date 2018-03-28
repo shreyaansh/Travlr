@@ -169,6 +169,29 @@ def getFeedback():
 
     return jsonify(ret_token)
 
+@app.route('/autocomplete/<token>', methods=['GET'])
+def autocomplete(token):
+    token = token.lower()
+    readf = open('./constants/cities_data.txt', 'r')
+
+    cities = json.loads(readf.read())
+    ckeys = list(cities.keys())
+    terms = []
+    ret_data = []
+    for key in ckeys:
+        if key.startswith(token):
+            terms.append(key)
+
+    for t in terms:
+        ret_data.append(cities[t])
+
+    # Flatten Nested Lists into one list
+    ret_list = [y for x in ret_data for y in x]
+
+    ret_token = {"result" : ret_list}
+
+    return jsonify(ret_token)
+
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
