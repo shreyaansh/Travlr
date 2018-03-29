@@ -115,9 +115,13 @@ def getWeather(city, year, month, day):
 def getEvents(city, category, year, month, day):
     api = eventful.API('pRWGnf7cxRpF8nmn')
     events = api.call('/events/search', q=category, l=city)
+    ev = {}
     for event in events['events']['event']:
+        ev['location'] = city
+        ev['event'] = event['title']
+        ev['venue'] = event['venue_name']
         print("%s at %s" % (event['title'], event['venue_name']))
-    return "City:" + city + " Category:" + category
+    return ev
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
