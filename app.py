@@ -87,7 +87,7 @@ class ItinContents(db.Model):
 
 
 class TempJSONtable(db.Model):
-    __tablename__="TempJSONtable"
+    __tablename__="JSONCache"
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     location=db.Column(db.String(200))
     data=db.Column(JSON)
@@ -179,15 +179,11 @@ def authenticate():
 
 def fetch_hotels(place):
     geocode_result = google_maps.geocode(place)
-
     hotels = {}
-
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
-
     for place in query_result.places:
         place.get_details()
         hotels[place.name] = place.details
-
     return hotels
 
 @app.route('/feedback', methods=['POST'])
@@ -206,9 +202,7 @@ def getFeedback():
     reg=Feedback(message,email)
     db.session.add(reg)
     db.session.commit()
-
     ret_token = { "status" : "Feedback submitted" }
-
     return jsonify(ret_token)
 
 @app.route('/travel-form', methods=['POST'])
@@ -405,7 +399,7 @@ def getTravelData():
     temp_hotels[end_dest] = data[end_dest]['hotels']
     # Return data jsonified here
     #print("the end")
-    print(data)
+    #print(data)
     return jsonify(data)
 
 
