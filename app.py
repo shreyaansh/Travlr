@@ -12,7 +12,7 @@ from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
 import forecastio
-import eventful
+import urllib.request
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -108,23 +108,10 @@ def getWeather(city, year, month, day):
 
 @app.route('/events/<city>/<category>/<year>/<month>/<day>')
 def getEvents(city, category, year, month, day):
-    api = eventful.API('pRWGnf7cxRpF8nmn')
-    events = api.call('/events/search', q=category, l=city)
-    ev = {}
-    i = 0
-    for event in events['events']['event']:
-        list=[]
-        ev[event['title']] = event['title']
-        #print(type(ev[event['title']]))
-        ev[event['title']]={}
-        ev[event['title']]['venue'] = event['venue_name']
-        ev[event['title']]['location'] = city
-        #list.append(event['venue_name'])
-        #list.append(city)
-        #ev[event['title']]['list']=list
-        #print("%s at %s" % (event['title'], event['venue_name']))
-        #i=i+1
-    return jsonify(ev)
+		url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&keywords=" + category + "&location=" + city + "&date=" + year + month + day + "00-" + year + month + day + "00"
+		response = urllib.request.urlopen(url)
+		data = json.loads(response.read())
+		return jsonify(data)
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
