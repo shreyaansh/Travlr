@@ -14,10 +14,12 @@ class Mainpage extends React.Component {
     }
 
     getFormData() {
-        var form_div = Array.from($("#form_div input"));
-        var stops = [];
         var form_data = {};
+        var stops = [];
+        var hotel_prefs = [];
+        var event_prefs = [];
 
+        var form_div = Array.from($("#form_div input"));
         form_div.forEach(function(input){
             if(input.id === "stop_location")
                 stops.push(input.value);
@@ -27,6 +29,23 @@ class Mainpage extends React.Component {
         });
 
         form_data['stops'] = stops;
+
+        var prefHotel = Array.from(document.getElementsByClassName('hotel_pref'));
+        var prefEvent = Array.from(document.getElementsByClassName('event_pref'));
+
+        prefHotel.forEach(function (pref) {
+           if(pref.checked){
+               hotel_prefs.push(pref.labels[0].innerText);
+           }
+        });
+        prefEvent.forEach(function (pref) {
+            if(pref.checked){
+                event_prefs.push(pref.labels[0].innerText);
+            }
+        });
+
+        form_data['hotel_prefs'] = hotel_prefs;
+        form_data['event_prefs'] = event_prefs;
 
         var userInfo = JSON.parse(localStorage.getItem("currentUser"));
         form_data['email'] = userInfo.profileObj.email;
@@ -53,47 +72,121 @@ class Mainpage extends React.Component {
                 <div className="row" id="main_form">
                     <div className="col s12 m6">
                         <div className="card blue-grey darken-4">
-                            <div className="card-content white-text" id="form_div">
+                            <div className="card-content white-text">
+
                                 <span id="form_user_name">Hi, {this.props.nameProp}</span>
                                 <span className="card-title">Lets plan your trip.</span>
 
-                                <div className="row">
-                                    <div className="input-field col s8">
-                                        <input id="from_location" type="text"/>
-                                        <label htmlFor="from_location">First Stop</label>
+                                <div id="form_div">
+                                    <div className="row">
+                                        <div className="input-field col s8">
+                                            <input id="from_location" type="text"/>
+                                            <label htmlFor="from_location">First Stop</label>
+                                        </div>
+                                        <div className="input-field col s4">
+                                            <input id="stop_days" type="text"/>
+                                            <label htmlFor="stop_days">Days</label>
+                                        </div>
                                     </div>
-                                    <div className="input-field col s4">
-                                        <input id="stop_days" type="text"/>
-                                        <label htmlFor="stop_days">Days</label>
+
+                                    <div id="stop_fields"></div>
+                                    <a className="btn blue-grey lighten-1" id="add_stop" onClick={add_stop_field}>
+                                        <i className="material-icons left">add</i>
+                                        Add Stop</a>
+
+                                    <div className="row">
+                                        <div className="input-field col s8">
+                                            <input id="to_location" type="text"/>
+                                            <label htmlFor="to_location">Last Stop</label>
+                                        </div>
+                                        <div className="input-field col s4">
+                                            <input id="stop_days" type="text"/>
+                                            <label htmlFor="stop_days">Days</label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="input-field col s6">
+                                            <input id="from_date" type="text" className="datepicker validate"/>
+                                            <label htmlFor="from_date">From?</label>
+                                        </div>
+                                        <div className="input-field col s6">
+                                            <input id="to_date" type="text" className="datepicker validate"/>
+                                            <label htmlFor="to_date">To?</label>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div id="stop_fields"></div>
-                                <a className="btn blue-grey lighten-1" id="add_stop" onClick={add_stop_field}>
-                                    <i className="material-icons left">add</i>
-                                    Add Stop</a>
+                                <div>
+                                    <span className="card-title">Choose your Preferences</span>
+                                    <span>Hotel Preferences</span>
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" className="hotel_pref"/>
+                                            <span>Cheap</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="hotel_pref"/>
+                                            <span>Expensive</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="hotel_pref"/>
+                                            <span>Romantic</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="hotel_pref"/>
+                                            <span>Downtown</span>
+                                        </label>&nbsp;&nbsp;
+                                    </p>
 
-                                <div className="row">
-                                    <div className="input-field col s8">
-                                        <input id="to_location" type="text"/>
-                                        <label htmlFor="to_location">Last Stop</label>
-                                    </div>
-                                    <div className="input-field col s4">
-                                        <input id="stop_days" type="text"/>
-                                        <label htmlFor="stop_days">Days</label>
-                                    </div>
+                                    <br />
+                                    <span>Event Preferences</span>
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Music</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Comedy</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Food</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Fundraisers</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Art</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Music</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Attractions</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Conference</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Sports</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Science</span>
+                                        </label>&nbsp;&nbsp;
+                                        <label>
+                                            <input type="checkbox" className="event_pref"/>
+                                            <span>Technology</span>
+                                        </label>&nbsp;&nbsp;
+                                    </p>
                                 </div>
-                                <div className="row">
-                                    <div className="input-field col s6">
-                                        <input id="from_date" type="text" className="datepicker validate"/>
-                                        <label htmlFor="from_date">From?</label>
-                                    </div>
-                                    <div className="input-field col s6">
-                                        <input id="to_date" type="text" className="datepicker validate"/>
-                                        <label htmlFor="to_date">To?</label>
-                                    </div>
-                                </div>
-
                             </div>
                             <div className="card-action orange accent-4">
                                 <a onClick={this.getFormData} className="white-text">Generate Itinerary</a>
