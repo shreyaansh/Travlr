@@ -116,11 +116,13 @@ def getEvents(city, category, year, month, day):
     api = eventful.API('pRWGnf7cxRpF8nmn')
     events = api.call('/events/search', q=category, l=city)
     ev = {}
+    i = 0
     for event in events['events']['event']:
-        ev['location'] = city
-        ev['event'] = event['title']
-        ev['venue'] = event['venue_name']
+        ev[i]['event'] = event['title']
+        ev[i]['venue'] = event['venue_name']
+        ev[i]['location'] = city
         print("%s at %s" % (event['title'], event['venue_name']))
+        i=i+1
     return jsonify(ev)
 
 @app.route('/authenticate', methods=['POST'])
