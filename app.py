@@ -31,7 +31,6 @@ class User(db.Model):
     lastname=db.Column(db.String(50))
     email = db.Column(db.String(50), unique=True)
     def __init__(self, email,firstname,lastname):
-        #self.id=1
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
@@ -48,8 +47,6 @@ class Feedback(db.Model):
     email = db.Column(db.String(50))
 
     def __init__(self,feedbacktext,email):
-        #self.id=1
-        #self.userid = userid
         self.feedbacktext = feedbacktext
         self.email = email
 
@@ -63,7 +60,6 @@ class Itinerary(db.Model):
     userid=db.Column(db.Integer)
     itinname=db.Column(db.String(100))
     def __init__(self, userid,itinname):
-        #self.id=1
         self.userid = userid
         self.itinname = itinname
 
@@ -75,11 +71,10 @@ class Itinerary(db.Model):
 class ItinContents(db.Model):
     __tablename__ = "Itin-Contents"
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
-    day=db.Column(db.Integer) #make date type #currently will store like 1,2,3....
+    day=db.Column(db.Integer) # make date type #currently will store like 1,2,3....
     slot=db.Column(db.String(100))
     eventname = db.Column(db.String(100))
     def __init__(self, day,slot,eventname):
-        #self.id=1
         self.day = day
         self.slot = slot
         self.eventname = eventname
@@ -156,7 +151,6 @@ def authenticate():
         if not db.session.query(User).filter(User.email == idinfo['email']).count():
             reg = User(idinfo['email'],name[0],name[1])
             db.session.add(reg)
-            #db.session.flush()
             db.session.commit()
 
         userid = idinfo['sub']
@@ -164,23 +158,18 @@ def authenticate():
         print(idinfo['email'])
         return jsonify(ret_token)
     except ValueError:
-        # Invalid token
         pass
 
     return jsonify(ret_token)
 
 def fetch_hotels(place):
     geocode_result = google_maps.geocode(place)
-    #print(geocode_result[0]['geometry']['location'])
-
     hotels = {}
 
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
 
     for place in query_result.places:
-        #print(place.name)
         place.get_details()
-        #print(place.details)
         hotels[place.name] = place.details
 
     return hotels
@@ -188,16 +177,12 @@ def fetch_hotels(place):
 @app.route('/feedback', methods=['POST'])
 def getFeedback():
     feedback_token = request.get_json()
-    #print(feedback_token)
 
     email=feedback_token['email']
     message=feedback_token['message']
-    #tryal = db.session.query(User).filter(User.email == feedback_token['email']).id
-    #print(tryal)
 
     reg=Feedback(message,email)
     db.session.add(reg)
-    #db.session.flush()
     db.session.commit()
 
     ret_token = { "status" : "Feedback submitted" }
@@ -216,10 +201,8 @@ def getTravelData():
     start_dest = origin
     end_dest = destination
 
-    #print(start_dest)
-    #print(end_dest)
-
     data = {}
+    temp_hotels = {}
 
     stop = 0
 
@@ -228,46 +211,61 @@ def getTravelData():
             if i == len(stops):
                 end_dest = destination
                 distance_matrix = google_maps.distance_matrix(start_dest, end_dest)
-                #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
                 data[start_dest] = {}
                 data[start_dest]['stop'] = i + 1
                 data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+                data[start_dest]['hotels'] = {}
                 data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                temp_hotels[start_dest] = data[start_dest]['hotels']
                 stop = i + 1
                 break
             else:
                 end_dest = stops[i]
+
             distance_matrix = google_maps.distance_matrix(start_dest, end_dest)
-            #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
             data[start_dest] = {}
             data[start_dest]['stop'] = i + 1
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+            data[start_dest]['hotels'] = {}
             data[start_dest]['hotels'] = fetch_hotels(start_dest)
             start_dest = stops[i]
+            temp_hotels[start_dest] = data[start_dest]['hotels']
     else:
         distance_matrix = google_maps.distance_matrix(origin, destination)
-        #print(distance_matrix['rows'][0]['elements'][0]['duration']['text'])
         data[start_dest] = {}
         data[start_dest]['stop'] = 1
         data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+        data[start_dest]['hotels'] = {}
         data[start_dest]['hotels'] = fetch_hotels(start_dest)
+        temp_hotels[start_dest] = data[start_dest]['hotels']
         stop = 2
 
     data[end_dest] = {}
     data[end_dest]['stop'] = stop + 1
     data[end_dest]['time_to_next'] = "N/a"
-    data[start_dest]['distance_to_next'] = "N/a"
+    data[end_dest]['distance_to_next'] = "N/a"
+    data[end_dest]['hotels'] = {}
     data[end_dest]['hotels'] = fetch_hotels(end_dest)
+    temp_hotels[end_dest] = data[end_dest]['hotels']
+    
+
+    for location in temp_hotels:
+        for hotel in temp_hotels[location]:
+            del temp_hotels[location][hotel]['reviews']
+            del temp_hotels[location][hotel]['geometry']['viewport']
+            temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
+            for coordinate in temp_hotels[location][hotel]['geometry']['location']:
+                temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
+            
+            data[location]['hotels'][hotel] = temp_hotels[location][hotel]
 
     print(data)
-
-    ret_token = { "status" : "Places submitted" }
-
+    
     # Return data jsonified here
-    return jsonify(ret_token)
+    return jsonify(data)
 
 
 if __name__ == '__main__':
