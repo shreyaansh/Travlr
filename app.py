@@ -121,7 +121,7 @@ def getEvents(city, category, year, month, day):
         ev['event'] = event['title']
         ev['venue'] = event['venue_name']
         print("%s at %s" % (event['title'], event['venue_name']))
-    return ev
+    return jsonify(ev)
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
@@ -130,21 +130,21 @@ def authenticate():
     try:
         # Specify the CLIENT_ID of the app that accesses the backend:
         idinfo = id_token.verify_oauth2_token(token["userInfo"], requests.Request(), constants.GOOGLE_CLIENT_ID)
-        
+
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
-        
+
         print("success")
-        print(idinfo)    
+        print(idinfo)
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         userid = idinfo['sub']
         print(userid)
         print(idinfo['email'])
         name = idinfo['name'].split(' ')
         print(name)
-        
+
         if not db.session.query(User).filter(User.email == idinfo['email']).count():
             reg = User(idinfo['email'],name[0],name[1])
             db.session.add(reg)
@@ -158,17 +158,17 @@ def authenticate():
     except ValueError:
         # Invalid token
         pass
-    
-    return jsonify(ret_token) 
+
+    return jsonify(ret_token)
 
 def fetch_hotels(place):
     geocode_result = google_maps.geocode(place)
     #print(geocode_result[0]['geometry']['location'])
-    
+
     hotels = {}
 
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
-    
+
     for place in query_result.places:
         #print(place.name)
         place.get_details()
