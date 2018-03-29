@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import Mainpage from './Mainpage';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Options from './Options';
 
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
@@ -68,7 +69,8 @@ class App extends React.Component {
 		return (
 			<div>
 				<Navbar navProps={this.navProps()}/>
-				<Mainpage nameProp={this.nameHandler()} />
+				{/*<Mainpage nameProp={this.nameHandler()} />*/}
+				{this.renderSelector()}
 				<Footer />
 				<Feedback />
 			</div>
@@ -76,16 +78,16 @@ class App extends React.Component {
 	}
 
 	renderSelector() {
-		if (this.props.renderer == 'PAGE_RENDER_CHANGE_LOGIN') {
-			return (
-				<DummyLogin />
-			);
-		}
-		else if (this.props.renderer == 'PAGE_RENDER_CHANGE_MAIN') {
-			return (
-			 <div></div>
-			);
-		}
+		if (this.props.renderer == 'main_page') {
+            return (
+				<Mainpage nameProp={this.nameHandler()} />
+            );
+        }
+        else if (this.props.renderer == 'options_page') {
+            return (
+				<Options />
+            );
+        }
 	}
 }
 

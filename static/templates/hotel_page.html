@@ -57,7 +57,19 @@
             location_name.id = 'location_name';
             location_name.innerHTML = params.location_name;
 
+            innerdiv02.appendChild(location_name);
+
             //Create multiple hotel divs here
+            hotels.forEach(function (hotel) {
+                params = {};
+                params['hotel_name'] = hotel.name;
+                params['hotel_address'] = hotel.formatted_address;
+                params['hotel_website'] = hotel.website;
+                params['hotel_phone'] = hotel.formatted_phone_number;
+                params['hotel_rating'] = hotel.rating;
+
+                innerdiv02.appendChild(addHotel(params));
+            })
         }
 
         function addHotel(params) {
