@@ -12,6 +12,11 @@ from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
 import forecastio
+import simplejson as json
+from sqlalchemy.dialects.postgresql.json import JSON
+import sys
+from ast import literal_eval
+import urllib.request
 
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
@@ -81,8 +86,40 @@ class ItinContents(db.Model):
     def __repr__(self):
         return '<day %r, slot %r, eventname %r>' % (self.day,self.slot,self.eventname)
 
+
+class JSONCache(db.Model):
+    __tablename__="JSONCache"
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    location=db.Column(db.String(200))
+    data=db.Column(JSON)
+
+    def __init__(self, location, data):
+        self.location = location
+        self.data = data
+
+    def __repr__(self):
+        return '<location %r, data %r>' % (self.location, self.data)
+
+
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
+
+def clean_fetched_data(temp_temp_hotels,dest):
+    temp_hotels={}
+    temp_hotels[dest]=temp_temp_hotels
+    for keys in temp_hotels:
+        print(keys)
+
+    for location in temp_hotels:
+        for hotel in temp_hotels[location]:
+            del temp_hotels[location][hotel]['reviews']
+            del temp_hotels[location][hotel]['geometry']['viewport']
+            temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
+            for coordinate in temp_hotels[location][hotel]['geometry']['location']:
+                temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
+    temp_temp_hotels = temp_hotels
+
+
 
 @app.route('/')
 def index():
@@ -105,6 +142,15 @@ def getWeather(city, year, month, day):
     forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
     return str(forecast.currently()).replace("<", "").replace(">", "")
 
+def getEvents(city, category, year, month, day):
+		url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&keywords=" + category + "&location=" + city + "&date=" + year + month + day + "00-" + year + month + day + "00"
+		print(url)
+		response = urllib.request.urlopen(url)
+		data = json.loads(response.read())
+		print("Printing here")
+		print(type(data))
+		return data
+
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     token = request.get_json()
@@ -112,21 +158,21 @@ def authenticate():
     try:
         # Specify the CLIENT_ID of the app that accesses the backend:
         idinfo = id_token.verify_oauth2_token(token["userInfo"], requests.Request(), constants.GOOGLE_CLIENT_ID)
-        
+
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
-        
+
         print("success")
-        print(idinfo)    
+        print(idinfo)
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         userid = idinfo['sub']
         print(userid)
         print(idinfo['email'])
         name = idinfo['name'].split(' ')
         print(name)
-        
+
         if not db.session.query(User).filter(User.email == idinfo['email']).count():
             reg = User(idinfo['email'],name[0],name[1])
             db.session.add(reg)
@@ -138,35 +184,27 @@ def authenticate():
         return jsonify(ret_token)
     except ValueError:
         pass
-    
-    return jsonify(ret_token) 
+
+    return jsonify(ret_token)
 
 def fetch_hotels(place):
     geocode_result = google_maps.geocode(place)
-    
     hotels = {}
-
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
-    
     for place in query_result.places:
         place.get_details()
         hotels[place.name] = place.details
-
     return hotels
 
 @app.route('/feedback', methods=['POST'])
 def getFeedback():
     feedback_token = request.get_json()
-
     email=feedback_token['email']
     message=feedback_token['message']
-
     reg=Feedback(message,email)
     db.session.add(reg)
     db.session.commit()
-
     ret_token = { "status" : "Feedback submitted" }
-
     return jsonify(ret_token)
 
 @app.route('/autocomplete/<token>', methods=['GET'])
@@ -195,7 +233,9 @@ def autocomplete(token):
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
-    print(token)
+    print(token['from_date'])
+    from_date = datetime.strptime(token['from_date'], '%m-%d-%Y')
+    to_date = datetime.strptime(token['to_date'], '%m-%d-%Y')
 
     origin = token['from_location']
     stops = token['stops']
@@ -206,7 +246,7 @@ def getTravelData():
 
     data = {}
     temp_hotels = {}
-
+    datadict = {}
     stop = 0
 
     if len(stops) != 0:
@@ -218,11 +258,26 @@ def getTravelData():
                 data[start_dest]['stop'] = i + 1
                 data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+                data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
                 data[start_dest]['hotels'] = {}
-                data[start_dest]['hotels'] = fetch_hotels(start_dest)
+
+                if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
+                    data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                    clean_fetched_data(data[start_dest]['hotels'],start_dest)
+                    jData = json.dumps(data[start_dest]["hotels"])
+                    reg = JSONCache(start_dest, jData)
+                    db.session.add(reg)
+                    db.session.commit()
+                else:
+                    sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+                    result = db.engine.execute(sqlq)
+                    for row in result:
+                        datadict[start_dest] =  json.loads(str(row.data))
+                    data[start_dest]['hotels'] = datadict[start_dest]
                 temp_hotels[start_dest] = data[start_dest]['hotels']
                 stop = i + 1
                 break
+
             else:
                 end_dest = stops[i]
 
@@ -231,8 +286,22 @@ def getTravelData():
             data[start_dest]['stop'] = i + 1
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+            data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
             data[start_dest]['hotels'] = {}
-            data[start_dest]['hotels'] = fetch_hotels(start_dest)
+
+            if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
+                data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                clean_fetched_data(data[start_dest]['hotels'],start_dest)
+                jData = json.dumps(data[start_dest]["hotels"])
+                reg = JSONCache(start_dest, jData)
+                db.session.add(reg)
+                db.session.commit()
+            else:
+                sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+                result = db.engine.execute(sqlq)
+                for row in result:
+                    datadict[start_dest] =  json.loads(str(row.data))
+                data[start_dest]['hotels'] = datadict[start_dest]
             start_dest = stops[i]
             temp_hotels[start_dest] = data[start_dest]['hotels']
     else:
@@ -241,33 +310,46 @@ def getTravelData():
         data[start_dest]['stop'] = 1
         data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
+        data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
         data[start_dest]['hotels'] = {}
-        data[start_dest]['hotels'] = fetch_hotels(start_dest)
+
+        if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
+            data[start_dest]['hotels'] = fetch_hotels(start_dest)
+            clean_fetched_data(data[start_dest]['hotels'],start_dest)
+            jData = json.dumps(data[start_dest]["hotels"])
+            reg = JSONCache(start_dest, jData)
+            db.session.add(reg)
+            db.session.commit()
+        else:
+            sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+            result = db.engine.execute(sqlq)
+            for row in result:
+                datadict[start_dest] =  json.loads(str(row.data))
+            data[start_dest]['hotels'] = datadict[start_dest]
         temp_hotels[start_dest] = data[start_dest]['hotels']
         stop = 2
-
     data[end_dest] = {}
     data[end_dest]['stop'] = stop + 1
     data[end_dest]['time_to_next'] = "N/a"
     data[end_dest]['distance_to_next'] = "N/a"
+    data[end_dest]['events'] = getEvents(end_dest.replace(" ", ""), 'music', str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)))
     data[end_dest]['hotels'] = {}
-    data[end_dest]['hotels'] = fetch_hotels(end_dest)
+
+    if not db.session.query(JSONCache).filter(JSONCache.location == end_dest).count():
+        data[end_dest]['hotels'] = fetch_hotels(end_dest)
+        clean_fetched_data(data[end_dest]['hotels'],end_dest)
+        jData = json.dumps(data[end_dest]["hotels"])
+        reg = JSONCache(end_dest, jData)
+        db.session.add(reg)
+        db.session.commit()
+    else:
+        sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+        result = db.engine.execute(sqlq)
+        for row in result:
+            datadict[end_dest] =  json.loads(str(row.data))
+        print(type(datadict[end_dest]))
+        data[end_dest]['hotels'] = datadict[end_dest]
     temp_hotels[end_dest] = data[end_dest]['hotels']
-    
-
-    for location in temp_hotels:
-        for hotel in temp_hotels[location]:
-            del temp_hotels[location][hotel]['reviews']
-            del temp_hotels[location][hotel]['geometry']['viewport']
-            temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
-            for coordinate in temp_hotels[location][hotel]['geometry']['location']:
-                temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
-            
-            data[location]['hotels'][hotel] = temp_hotels[location][hotel]
-
-    print(data)
-    
-    # Return data jsonified here
     return jsonify(data)
 
 
