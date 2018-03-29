@@ -15,6 +15,7 @@ class Location extends React.Component {
     render() {
         var locations = this.props.items['data'];
         var hotels = [];
+        console.log(locations);
         Object.keys(locations[this.props.location_name].hotels).forEach((hotel) => hotels.push(hotel));
         return (
             <div className="row">
