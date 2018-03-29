@@ -1,0 +1,131 @@
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    <!-- Google -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Anton" rel="stylesheet">
+
+    <link rel="stylesheet" href="../style.css">
+    <title>Travlr ✈️ </title>
+</head>
+<body>
+
+    <div class="row">
+        <div class="col s12 m12">
+            <div class="card white">
+                <div class="card-content black-text">
+                    <span class="card-title">LOCATION</span>
+
+                    <!-- Individual Hotels -->
+                    <div class="row">
+
+                            <div class="card white col s12 m12">
+                                <div class="card-content black-text">
+                                    <span class="card-title" id="hotel_name">Hotel Name</span>
+                                    <p id="hotel_address">TEST</p>
+                                    <p id="hotel_website">TEST</p>
+                                    <p id="hotel_phone">9090909090</p>
+                                    <p id="hotel_rating">4.5</p>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- End Here -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+        function addLocation(params, hotels) {
+            var location_div = document.createElement('div');
+            location_div.className = 'row';
+
+            var innerdiv01 = document.createElement('div');
+            innerdiv01.className = 'card white col s12 m12';
+
+            var innerdiv02 = document.createElement('div');
+            innerdiv02.className = 'card-content black-text';
+
+            var location_name = document.createElement('span');
+            location_name.className = 'card-title';
+            location_name.id = 'location_name';
+            location_name.innerHTML = params.location_name;
+
+            innerdiv02.appendChild(location_name);
+
+            //Create multiple hotel divs here
+            hotels.forEach(function (hotel) {
+                params = {};
+                params['hotel_name'] = hotel.name;
+                params['hotel_address'] = hotel.formatted_address;
+                params['hotel_website'] = hotel.website;
+                params['hotel_phone'] = hotel.formatted_phone_number;
+                params['hotel_rating'] = hotel.rating;
+
+                innerdiv02.appendChild(addHotel(params));
+            })
+        }
+
+        function addHotel(params) {
+            var hotel_div = document.createElement('div');
+            hotel_div.className = 'row';
+
+            var innerdiv01 = document.createElement('div');
+            innerdiv01.className = 'card white col s12 m12';
+
+            var innerdiv02 = document.createElement('div');
+            innerdiv02.className = 'card-content black-text';
+
+            var hotel_name = document.createElement('span');
+            hotel_name.className = 'card-title';
+            hotel_name.id = 'hotel_name';
+            hotel_name.innerHTML = params.hotel_name;
+
+            var hotel_address = document.createElement('p');
+            hotel_address.id = 'hotel_address';
+            hotel_address.innerHTML = "<b>Address: </b>" + params.hotel_address;
+
+            var hotel_website = document.createElement('p');
+            hotel_website.id = 'hotel_website';
+            hotel_website.innerHTML = "<b>Website: </b>" + params.hotel_website;
+
+            var hotel_phone = document.createElement('p');
+            hotel_phone.id = 'hotel_phone';
+            hotel_phone.innerHTML = "<b>Phone: </b>" + params.hotel_phone;
+
+            var hotel_rating = document.createElement('p');
+            hotel_rating.id = 'hotel_rating';
+            hotel_rating.innerHTML = "<b>Rating: </b>" + params.hotel_rating;
+
+            // Add to DIVs
+            innerdiv02.appendChild(hotel_name);
+            innerdiv02.appendChild(hotel_address);
+            innerdiv02.appendChild(hotel_website);
+            innerdiv02.appendChild(hotel_phone);
+            innerdiv02.appendChild(hotel_rating);
+
+            innerdiv01.appendChild(innerdiv02);
+            hotel_div.appendChild(innerdiv01);
+
+            return hotel_div;
+        }
+
+        (function($){
+            $(function(){
+
+                $('.modal').modal();
+
+            }); // end of document ready
+        })(jQuery); // end of jQuery name space
+
+    </script>
+
+
+</body>
+</html>
