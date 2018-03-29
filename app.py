@@ -246,7 +246,7 @@ def getTravelData():
                     db.session.add(reg)
                     db.session.commit()
                 else:
-                    sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+                    sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(start_dest)
                     result = db.engine.execute(sqlq)
                     for row in result:
                         datadict[start_dest] =  json.loads(str(row.data))
@@ -274,7 +274,7 @@ def getTravelData():
                 db.session.add(reg)
                 db.session.commit()
             else:
-                sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+                sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(start_dest)
                 result = db.engine.execute(sqlq)
                 for row in result:
                     datadict[start_dest] =  json.loads(str(row.data))
@@ -298,7 +298,7 @@ def getTravelData():
             db.session.add(reg)
             db.session.commit()
         else:
-            sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
+            sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(start_dest)
             result = db.engine.execute(sqlq)
             for row in result:
                 datadict[start_dest] =  json.loads(str(row.data))
@@ -320,6 +320,7 @@ def getTravelData():
         db.session.add(reg)
         db.session.commit()
     else:
+        #print("destination sent is %s"%end_dest)
         sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
         result = db.engine.execute(sqlq)
         for row in result:
