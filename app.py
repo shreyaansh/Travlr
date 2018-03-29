@@ -107,8 +107,6 @@ google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
 def clean_fetched_data(temp_temp_hotels,dest):
     temp_hotels={}
     temp_hotels[dest]=temp_temp_hotels
-    for keys in temp_hotels:
-        print(keys)
 
     for location in temp_hotels:
         for hotel in temp_hotels[location]:
@@ -144,11 +142,8 @@ def getWeather(city, year, month, day):
 
 def getEvents(city, category, year, month, day):
 		url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&keywords=" + category + "&location=" + city + "&date=" + year + month + day + "00-" + year + month + day + "00"
-		print(url)
 		response = urllib.request.urlopen(url)
 		data = json.loads(response.read())
-		print("Printing here")
-		print(type(data))
 		return data
 
 @app.route('/authenticate', methods=['POST'])
@@ -162,16 +157,10 @@ def authenticate():
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-
         print("success")
-        print(idinfo)
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         userid = idinfo['sub']
-        print(userid)
-        print(idinfo['email'])
         name = idinfo['name'].split(' ')
-        print(name)
 
         if not db.session.query(User).filter(User.email == idinfo['email']).count():
             reg = User(idinfo['email'],name[0],name[1])
@@ -179,8 +168,6 @@ def authenticate():
             db.session.commit()
 
         userid = idinfo['sub']
-        print(userid)
-        print(idinfo['email'])
         return jsonify(ret_token)
     except ValueError:
         pass
@@ -210,7 +197,6 @@ def getFeedback():
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
-    print(token['from_date'])
     from_date = datetime.strptime(token['from_date'], '%m-%d-%Y')
     to_date = datetime.strptime(token['to_date'], '%m-%d-%Y')
 
@@ -320,12 +306,10 @@ def getTravelData():
         db.session.add(reg)
         db.session.commit()
     else:
-        #print("destination sent is %s"%end_dest)
         sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
         result = db.engine.execute(sqlq)
         for row in result:
             datadict[end_dest] =  json.loads(str(row.data))
-        print(type(datadict[end_dest]))
         data[end_dest]['hotels'] = datadict[end_dest]
     temp_hotels[end_dest] = data[end_dest]['hotels']
     return jsonify(data)
