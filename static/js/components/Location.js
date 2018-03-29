@@ -21,8 +21,12 @@ class Location extends React.Component {
                 <div className="col s12 m12">
                     <div className="card white" id="location_card">
                         <div className="card-content black-text">
-                            <span className="card-title">{this.props.location_name}</span>
-                            {hotels.map((hotel) => <Hotel key={hotel} hotel_data={locations[this.props.location_name].hotels[hotel]}/>)}
+                            <span className="card-title"><b>{this.props.location_name.toUpperCase()}</b></span>
+                            <h5>Select a Hotel</h5>
+                            <br />
+                            <div id="hotel_cards_div">
+                                {hotels.map((hotel) => <Hotel key={hotel} hotel_data={locations[this.props.location_name].hotels[hotel]}/>)}
+                            </div>
                         </div>
                     </div>
                 </div>
