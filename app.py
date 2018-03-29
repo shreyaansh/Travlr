@@ -118,11 +118,17 @@ def getEvents(city, category, year, month, day):
     ev = {}
     i = 0
     for event in events['events']['event']:
-        ev[i]['event'] = event['title']
-        ev[i]['venue'] = event['venue_name']
-        ev[i]['location'] = city
-        print("%s at %s" % (event['title'], event['venue_name']))
-        i=i+1
+        list=[]
+        ev[event['title']] = event['title']
+        #print(type(ev[event['title']]))
+        ev[event['title']]={}
+        ev[event['title']]['venue'] = event['venue_name']
+        ev[event['title']]['location'] = city
+        #list.append(event['venue_name'])
+        #list.append(city)
+        #ev[event['title']]['list']=list
+        #print("%s at %s" % (event['title'], event['venue_name']))
+        #i=i+1
     return jsonify(ev)
 
 @app.route('/authenticate', methods=['POST'])
