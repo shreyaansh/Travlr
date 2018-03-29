@@ -86,7 +86,7 @@ class ItinContents(db.Model):
         return '<day %r, slot %r, eventname %r>' % (self.day,self.slot,self.eventname)
 
 
-class TempJSONtable(db.Model):
+class JSONCache(db.Model):
     __tablename__="JSONCache"
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     location=db.Column(db.String(200))
@@ -191,14 +191,6 @@ def getFeedback():
     feedback_token = request.get_json()
     email=feedback_token['email']
     message=feedback_token['message']
-    #tryal = db.session.query(User).filter(User.email == feedback_token['email']).count()
-    #print(tryal)
-    #query execution example
-    #sqlq='Select email from "public"."Users"'
-    #result = db.engine.execute(sqlq)
-    #print(result)
-    #for row in result:
-    #    print(row)
     reg=Feedback(message,email)
     db.session.add(reg)
     db.session.commit()
@@ -232,84 +224,46 @@ def getTravelData():
                 data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
                 data[start_dest]['hotels'] = {}
-                #adding new code here
-                #datadict={}
-                #for keys in data:
-                    #print(data[keys])
-                    #for key in data[keys]:
-                    #    print(key)
-                    #break
-                if not db.session.query(TempJSONtable).filter(TempJSONtable.location == start_dest).count():
+
+                if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
                     data[start_dest]['hotels'] = fetch_hotels(start_dest)
-                    print(type(data[start_dest]['hotels']))
                     clean_fetched_data(data[start_dest]['hotels'],start_dest)
-                    print("cleaned")
-                    #print(type(data[end_dest]['hotels']))
                     jData = json.dumps(data[start_dest]["hotels"])
-                    #print(data[end_dest]["hotels"])
-                    reg = TempJSONtable(start_dest, jData)
+                    reg = JSONCache(start_dest, jData)
                     db.session.add(reg)
                     db.session.commit()
-                    print('added')
                 else:
-                    print("Keys already exists.")
-                    #db.session.query(TempJSONtable).filter(TempJSONtable.location == keys)
-                    sqlq='Select data from "public"."TempJSONtable" where location like \'%s\'' %(end_dest)
-                    #print(sqlq)
+                    sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
                     result = db.engine.execute(sqlq)
-                    #print(result)
-                    #datadict={}
                     for row in result:
-                        #print(object_as_dict(row))
-                        #print(row.data)
                         datadict[start_dest] =  json.loads(str(row.data))
-                    print(type(datadict[start_dest]))
                     data[start_dest]['hotels'] = datadict[start_dest]
-                #addition ends here
                 temp_hotels[start_dest] = data[start_dest]['hotels']
                 stop = i + 1
                 break
+
             else:
                 end_dest = stops[i]
+
             distance_matrix = google_maps.distance_matrix(start_dest, end_dest)
             data[start_dest] = {}
             data[start_dest]['stop'] = i + 1
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
             data[start_dest]['hotels'] = {}
-            #data[start_dest]['hotels'] = fetch_hotels(start_dest)
-            #adding new code here
-            #datadict={}
-            #for keys in data:
-                #print(data[keys])
-                #for key in data[keys]:
-                #    print(key)
-                #break
-            if not db.session.query(TempJSONtable).filter(TempJSONtable.location == start_dest).count():
+
+            if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
                 data[start_dest]['hotels'] = fetch_hotels(start_dest)
-                print(type(data[start_dest]['hotels']))
                 clean_fetched_data(data[start_dest]['hotels'],start_dest)
-                #print("cleaned")
-                #print(type(data[end_dest]['hotels']))
                 jData = json.dumps(data[start_dest]["hotels"])
-                #print(data[end_dest]["hotels"])
-                reg = TempJSONtable(start_dest, jData)
+                reg = JSONCache(start_dest, jData)
                 db.session.add(reg)
                 db.session.commit()
-                #print('added')
             else:
-                print("Key already exists.")
-                #db.session.query(TempJSONtable).filter(TempJSONtable.location == keys)
-                sqlq='Select data from "public"."TempJSONtable" where location like \'%s\'' %(end_dest)
-                #print(sqlq)
+                sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
                 result = db.engine.execute(sqlq)
-                #print(result)
-                #datadict={}
                 for row in result:
-                    #print(object_as_dict(row))
-                    #print(row.data)
                     datadict[start_dest] =  json.loads(str(row.data))
-                #print(type(datadict[start_dest]))
                 data[start_dest]['hotels'] = datadict[start_dest]
             start_dest = stops[i]
             temp_hotels[start_dest] = data[start_dest]['hotels']
@@ -320,40 +274,19 @@ def getTravelData():
         data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
         data[start_dest]['hotels'] = {}
-        data[start_dest]['hotels'] = fetch_hotels(start_dest)
-        #add code here as well
-        #adding new code here
-        #datadict={}
-        #for keys in data:
-            #print(data[keys])
-            #for key in data[keys]:
-            #    print(key)
-            #break
-        if not db.session.query(TempJSONtable).filter(TempJSONtable.location == start_dest).count():
+
+        if not db.session.query(JSONCache).filter(JSONCache.location == start_dest).count():
             data[start_dest]['hotels'] = fetch_hotels(start_dest)
-            print(type(data[start_dest]['hotels']))
             clean_fetched_data(data[start_dest]['hotels'],start_dest)
-            print("cleaned")
-            #print(type(data[end_dest]['hotels']))
             jData = json.dumps(data[start_dest]["hotels"])
-            #print(data[end_dest]["hotels"])
-            reg = TempJSONtable(start_dest, jData)
+            reg = JSONCache(start_dest, jData)
             db.session.add(reg)
             db.session.commit()
-            print('added')
         else:
-            print("Keys already exists.")
-            #db.session.query(TempJSONtable).filter(TempJSONtable.location == keys)
-            sqlq='Select data from "public"."TempJSONtable" where location like \'%s\'' %(end_dest)
-            #print(sqlq)
+            sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
             result = db.engine.execute(sqlq)
-            #print(result)
-            #datadict={}
             for row in result:
-                #print(object_as_dict(row))
-                #print(row.data)
                 datadict[start_dest] =  json.loads(str(row.data))
-            print(type(datadict[start_dest]))
             data[start_dest]['hotels'] = datadict[start_dest]
         temp_hotels[start_dest] = data[start_dest]['hotels']
         stop = 2
@@ -362,44 +295,22 @@ def getTravelData():
     data[end_dest]['time_to_next'] = "N/a"
     data[end_dest]['distance_to_next'] = "N/a"
     data[end_dest]['hotels'] = {}
-    #data[end_dest]['hotels'] = fetch_hotels(end_dest)
-    #adding new code here
-    #datadict={}
-    #for keys in data:
-        #print(data[keys])
-        #for key in data[keys]:
-        #    print(key)
-        #break
-    if not db.session.query(TempJSONtable).filter(TempJSONtable.location == end_dest).count():
+
+    if not db.session.query(JSONCache).filter(JSONCache.location == end_dest).count():
         data[end_dest]['hotels'] = fetch_hotels(end_dest)
-        print(type(data[end_dest]['hotels']))
         clean_fetched_data(data[end_dest]['hotels'],end_dest)
-        print("cleaned")
-        #print(type(data[end_dest]['hotels']))
         jData = json.dumps(data[end_dest]["hotels"])
-        #print(data[end_dest]["hotels"])
-        reg = TempJSONtable(end_dest, jData)
+        reg = JSONCache(end_dest, jData)
         db.session.add(reg)
         db.session.commit()
-        print('added')
     else:
-        print("Keys already exists.")
-        #db.session.query(TempJSONtable).filter(TempJSONtable.location == keys)
-        sqlq='Select data from "public"."TempJSONtable" where location like \'%s\'' %(end_dest)
-        #print(sqlq)
+        sqlq='Select data from "public"."JSONCache" where location like \'%s\'' %(end_dest)
         result = db.engine.execute(sqlq)
-        #print(result)
-        #datadict={}
         for row in result:
-            #print(object_as_dict(row))
-            #print(row.data)
             datadict[end_dest] =  json.loads(str(row.data))
         print(type(datadict[end_dest]))
         data[end_dest]['hotels'] = datadict[end_dest]
     temp_hotels[end_dest] = data[end_dest]['hotels']
-    # Return data jsonified here
-    #print("the end")
-    #print(data)
     return jsonify(data)
 
 
