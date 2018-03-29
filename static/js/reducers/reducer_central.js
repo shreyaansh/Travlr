@@ -1,7 +1,6 @@
 const initialState = {
     renderer: "main_page",
-    hotels: {},
-    events: {},
+    items: {},
 }
 
 function centralReducer(state = initialState, action) {
@@ -9,8 +8,7 @@ function centralReducer(state = initialState, action) {
         case "PAGE_RENDER_CHANGE_MAIN":
             return ({
                 renderer: "main_page",
-                hotels: state.hotels,
-                events: state.events,
+                items: state.items,
 
             });
         case "POST_USER_INFO":
@@ -20,8 +18,7 @@ function centralReducer(state = initialState, action) {
         case "SET_ITEMS_IN_STORE":
             return ({
                 renderer: "options_page",
-                hotels: action.payload,
-                events: state.events,
+                items: action.payload,
             });
         default:
             return state

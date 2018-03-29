@@ -29,3 +29,13 @@
     width: 185px;
     padding: 10px;
 }
+
+#hotel_cards_div{
+    max-height: 450px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#hotel_card {
+    position: relative;
+}

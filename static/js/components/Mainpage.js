@@ -35,7 +35,7 @@ class Mainpage extends React.Component {
             console.log(constants.routeUrl);
             console.log(constants.routeUrl + 'travel-form');
             axios.post(constants.routeUrl + "travel-form", form_data).then(res => {
-                console.log(res);
+                // console.log(res);
                 console.log("FORM_DATA: Submitted", form_data);
                 this.props.fetchItems(res);
             });
@@ -157,7 +157,7 @@ remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        hotels: centralReducer.hotels
+        items: centralReducer.items
     });
 }
 
