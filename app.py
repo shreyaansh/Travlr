@@ -243,7 +243,7 @@ def getTravelData():
     stops = token['stops']
     destination = token['to_location']
 
-    if token['hotel_prefs'] == 0:
+    if len(token['hotel_prefs']) == 0:
         hotel_pref = ''
     else:
         hotel_pref = token['hotel_prefs'][0] + ' '
