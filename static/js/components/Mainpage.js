@@ -163,10 +163,6 @@ class Mainpage extends React.Component {
                                         </label>&nbsp;&nbsp;
                                         <label>
                                             <input type="checkbox" className="event_pref"/>
-                                            <span>Music</span>
-                                        </label>&nbsp;&nbsp;
-                                        <label>
-                                            <input type="checkbox" className="event_pref"/>
                                             <span>Attractions</span>
                                         </label>&nbsp;&nbsp;
                                         <label>
