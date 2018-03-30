@@ -17,7 +17,6 @@ from sqlalchemy.dialects.postgresql.json import JSON
 import sys
 from ast import literal_eval
 import urllib.request
-import ssl
 
 
 
@@ -146,10 +145,7 @@ def getWeather(city, year, month, day):
 
 def getEvents(city, category, year, month, day):
     url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&keywords=" + category + "&location=" + city + "&date=" + year + month + day + "00-" + year + month + day + "00"
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    response = urllib.request.urlopen(url)#, context=ctx)
+    response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     return data
 
