@@ -31,11 +31,23 @@
 }
 
 #hotel_cards_div{
+    border: solid 1px;
     max-height: 450px;
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
 }
 #hotel_card {
+    position: relative;
+}
+
+#event_cards_div{
+    border: solid 1px;
+    max-height: 450px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#event_card {
     position: relative;
 }

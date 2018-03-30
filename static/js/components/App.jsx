@@ -6,6 +6,7 @@ import Mainpage from './Mainpage';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Options from './Options';
+import Itinerary from './Itinerary'
 
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
@@ -88,6 +89,11 @@ class App extends React.Component {
 				<Options />
             );
         }
+        else if (this.props.renderer == 'itinerary_page') {
+			return (
+				<Itinerary />
+			)
+		}
 	}
 }
 
