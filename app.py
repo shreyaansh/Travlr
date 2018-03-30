@@ -19,7 +19,6 @@ from ast import literal_eval
 import urllib.request
 
 
-
 app = Flask(__name__, static_folder="./static/dist",
         template_folder="./static")
 
@@ -220,10 +219,18 @@ def autocomplete(token):
 
     return jsonify(ret_token)
 
+@app.route('/save-itin', methods=['POST'])
+def saveItinerary():
+    token = request.get_json()
+
+    # Now request should have two things: 1. The user information, so we can correctly map the itinerary to the user
+    # 2. Obviously, the itinerary in JSON format
+
+    # Add database calls here
+
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
-    #print(token)
     from_date = datetime.strptime(token['from_date'], '%m-%d-%Y')
     to_date = datetime.strptime(token['to_date'], '%m-%d-%Y')
 
@@ -233,8 +240,6 @@ def getTravelData():
 
     hotel_pref = token['hotel_prefs'][0]
     event_prefs = token['event_prefs']
-    #print(hotel_pref)
-    #print(event_prefs)
     start_dest = origin
     end_dest = destination
 
