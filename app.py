@@ -362,8 +362,8 @@ def getTravelData():
     data[end_dest]['hotels'] = {}
 
     if not db.session.query(JSONCache).filter(JSONCache.location == end_dest, JSONCache.preference == hotel_pref).count():
-        data[end_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
-        clean_fetched_data(data[end_dest]['hotels'],start_dest)
+        data[end_dest]['hotels'] = fetch_hotels(hotel_pref, end_dest)
+        clean_fetched_data(data[end_dest]['hotels'], end_dest)
         jData = json.dumps(data[end_dest]["hotels"])
         print("adding pref")
         reg = JSONCache(end_dest, jData, hotel_pref)
