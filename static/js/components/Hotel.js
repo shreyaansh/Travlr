@@ -20,8 +20,8 @@ class Hotel extends React.Component {
         this.props.selectHotel(this.props.hotel_data, this.props.id, this.props.city);
         this.props.action(this.props.id);
 
-        if(this.props.currentSelection[this.props.city]) {
-            var previouslySelectedHotel = this.props.currentSelection[this.props.city].selectedHotel;
+        if(this.props.currentSelection.itinerary[this.props.city]) {
+            var previouslySelectedHotel = this.props.currentSelection.itinerary[this.props.city].selectedHotel;
             if(previouslySelectedHotel) {
                 //check if hotel has been selected
                 if(previouslySelectedHotel == this.props.id) {

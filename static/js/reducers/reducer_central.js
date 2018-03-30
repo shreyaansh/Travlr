@@ -1,7 +1,10 @@
 const initialState = {
     renderer: "main_page",
     items: {},
-    currentSelection: {}
+    currentSelection: {
+        itinerary: {},
+        email: ""
+    }
 }
 
 function centralReducer(state = initialState, action) {
@@ -24,37 +27,49 @@ function centralReducer(state = initialState, action) {
                 items: action.payload,
                 currentSelection: state.currentSelection
             });
+
+        case "GENERATE_ITINERARY_FROM_DATA":
+            var new_itin = state.currentSelection;
+            var userInfo = JSON.parse(localStorage.getItem("currentUser"));
+            new_itin['email'] = userInfo.profileObj.email;
+            console.log(new_itin);
+            return ({
+               renderer: "itinerary_page",
+               items: state.items,
+               currentSelection: state.currentSelection
+            });
+
         case "HOTEL_SELECTED":
-            if(!(action.city in state.currentSelection)) {
-                state.currentSelection[action.city] = {}
-                state.currentSelection[action.city].selectedHotel = {};
-            } else if(!(state.currentSelection[action.city].selectedHotel)){
-                state.currentSelection[action.city].selectedHotel = {}
+            if(!(action.city in state.currentSelection.itinerary)) {
+                state.currentSelection.itinerary[action.city] = {}
+                state.currentSelection.itinerary[action.city].selectedHotel = {};
+            } else if(!(state.currentSelection.itinerary[action.city].selectedHotel)){
+                state.currentSelection.itinerary[action.city].selectedHotel = {}
             }
-            state.currentSelection[action.city].selectedHotel = action.payload;
-            console.log(state.currentSelection);
+            state.currentSelection.itinerary[action.city].selectedHotel = action.payload;
+            console.log(state.currentSelection.itinerary);
             return state;
         
         case "EVENT_SELECTED":
-            if(!(action.city in state.currentSelection)) {
-                state.currentSelection[action.city] = {}
-                state.currentSelection[action.city].selectedEvents = {}
-            } else if(!(state.currentSelection[action.city].selectedEvents)){
-                state.currentSelection[action.city].selectedEvents = {}
+            if(!(action.city in state.currentSelection.itinerary)) {
+                state.currentSelection.itinerary[action.city] = {}
+                state.currentSelection.itinerary[action.city].selectedEvents = {}
+            } else if(!(state.currentSelection.itinerary[action.city].selectedEvents)){
+                state.currentSelection.itinerary[action.city].selectedEvents = {}
             }
-            state.currentSelection[action.city].selectedEvents[action.identifier] = action.payload;
-            console.log(state.currentSelection);
+            state.currentSelection.itinerary[action.city].selectedEvents[action.identifier] = action.payload;
+            console.log(state.currentSelection.itinerary);
             return state;
 
         case "EVENT_UNSELECTED":
-            if(!(action.city in state.currentSelection)) {
-                state.currentSelection[action.city] = {}
-                state.currentSelection[action.city].selectedEvents = {}
-            } else if(!(state.currentSelection[action.city].selectedEvents)){
-                state.currentSelection[action.city].selectedEvents = {}
+            if(!(action.city in state.currentSelection.itinerary)) {
+                state.currentSelection.itinerary[action.city] = {}
+                state.currentSelection.itinerary[action.city].selectedEvents = {}
+            } else if(!(state.currentSelection.itinerary[action.city].selectedEvents)){
+                state.currentSelection.itinerary[action.city].selectedEvents = {}
             }
-            delete state.currentSelection[action.city].selectedEvents[action.identifier];
-            console.log(state.currentSelection);
+            delete state.currentSelection.itinerary[action.city].selectedEvents[action.identifier];
+            console.log(state.currentSelection.itinerary);
             return state;                
 
         default:
