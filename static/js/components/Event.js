@@ -52,7 +52,7 @@ class Event extends React.Component {
                         <p id="event_url"><b>Website: </b>{this.props.event_data['venue_url']}</p>
                     </div>
                     <div className="card-action">
-                        <a className="btn green">I like this Event</a>
+                        <a className="btn green">I like this Event</a>&nbsp;&nbsp;
                         <a className="btn red">I do not like this Event</a>
                     </div>
                 </div>
