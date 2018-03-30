@@ -31,7 +31,7 @@ class Options extends React.Component {
 
     render() {
         var locations = this.locationList();
-        console.log(locations);
+        // console.log(locations);
         return (
             <div id="options">
                 <h2 id="opt_tile">Let's make your Itinerary.</h2>

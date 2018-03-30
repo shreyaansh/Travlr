@@ -1,6 +1,7 @@
 const initialState = {
     renderer: "main_page",
     items: {},
+    currentSelection: {}
 }
 
 function centralReducer(state = initialState, action) {
@@ -9,6 +10,7 @@ function centralReducer(state = initialState, action) {
             return ({
                 renderer: "main_page",
                 items: state.items,
+                currentSelection: state.currentSelection
 
             });
         case "POST_USER_INFO":
@@ -19,7 +21,18 @@ function centralReducer(state = initialState, action) {
             return ({
                 renderer: "options_page",
                 items: action.payload,
+                currentSelection: state.currentSelection
             });
+        case "HOTEL_SELECTED":
+            if(!(action.city in state.currentSelection)) {
+                state.currentSelection[action.city] = {}
+                state.currentSelection[action.city].selectedHotel = "default"
+                
+            }
+            state.currentSelection[action.city].selectedHotel = action.payload
+            console.log(state.currentSelection);
+            console.log(action.identifier);
+
         default:
             return state
     }
