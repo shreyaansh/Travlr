@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import constants from "../../../constants/constants"
 import fetchItems from "../actions/action_fetch_items"
 import selectHotel from "../actions/action_select_hotel"
+import selectEvent from "../actions/action_select_event"
+import unselectEvent from "../actions/action_unselect_event"
 
 class Event extends React.Component {
 
@@ -18,10 +20,12 @@ class Event extends React.Component {
 
     onSelectClick() {
         this.setState({card_class : "card teal col s12 m12"});
+        this.props.selectEvent(this.props.event_data, this.props.id, this.props.city);
     }
 
     onUnselectClick() {
         this.setState({card_class : "card white col s12 m12"});
+        this.props.unselectEvent(this.props.event_data, this.props.id, this.props.city);        
     }
 
     render() {
@@ -52,7 +56,7 @@ const mapStateToProps = ({ centralReducer }) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({selectEvent , unselectEvent}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Event);
