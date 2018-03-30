@@ -43,14 +43,17 @@ class Event extends React.Component {
             <div className="row">
                 <div className={this.state.card_class} id="event_card">
                     <div className="card-content black-text">
-                        <span className="card-title" id="hotel_name">{this.props.hotel_data['name']}</span>
-                        <p id="hotel_address">{this.props.hotel_data['formatted_address']}</p>
-                        <p id="hotel_website"><b>Website: </b>{this.props.hotel_data['website']}</p>
-                        <p id="hotel_phone"><b>Phone: </b>{this.props.hotel_data['formatted_phone_number']}</p>
-                        <p id="hotel_rating"><b>Rating: </b>{this.props.hotel_data['rating']}</p>
+                        <span className="card-title" id="event_name">{this.props.event_data['title']}</span>
+                        <p id="event_time"><b>Time: </b>{this.props.event_data['start_time']}</p>
+                        <p id="event_desc">{this.props.event_data['description']}</p>
+                        <br />
+                        <p id="event_venue"><b>{this.props.event_data['venue_name']}</b></p>
+                        <p id="event_address"><b>Address: </b>{this.props.event_data['venue_address']}</p>
+                        <p id="event_url"><b>Website: </b>{this.props.event_data['venue_url']}</p>
                     </div>
                     <div className="card-action">
-                        <a className="btn green" onClick={this.onHotelSelected}>Select this Hotel</a>
+                        <a className="btn green">I like this Event</a>
+                        <a className="btn red">I do not like this Event</a>
                     </div>
                 </div>
             </div>
@@ -60,12 +63,12 @@ class Event extends React.Component {
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        currentSelection: centralReducer.currentSelection
+        // currentSelection: centralReducer.currentSelection
     });
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({selectHotel}, dispatch);
+    return bindActionCreators({}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Event);
