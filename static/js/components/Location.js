@@ -27,6 +27,7 @@ class Location extends React.Component {
 
     render() {
         var locations = this.props.items['data'];
+        console.log(this.props.items);
         var hotels = [];
         var identifier = uuidv1();
         
