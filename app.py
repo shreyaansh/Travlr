@@ -112,14 +112,19 @@ def clean_fetched_data(temp_temp_hotels,dest):
 
     for location in temp_hotels:
         for hotel in temp_hotels[location]:
-            del temp_hotels[location][hotel]['reviews']
-            del temp_hotels[location][hotel]['geometry']['viewport']
-            temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
+            if 'reviews' in temp_hotels[location][hotel]:
+                del temp_hotels[location][hotel]['reviews']
+            if 'viewport' in temp_hotels[location][hotel]:
+                del temp_hotels[location][hotel]['geometry']['viewport']
+            if 'rating' in temp_hotels[location][hotel]:
+                temp_hotels[location][hotel]['rating'] = str(temp_hotels[location][hotel]['rating'])
+            else:
+                temp_hotels[location][hotel]['rating'] = ''
+
             for coordinate in temp_hotels[location][hotel]['geometry']['location']:
                 temp_hotels[location][hotel]['geometry']['location'][coordinate] = str(temp_hotels[location][hotel]['geometry']['location'][coordinate])
+
     temp_temp_hotels = temp_hotels
-
-
 
 @app.route('/')
 def index():
