@@ -12,31 +12,17 @@ class Event extends React.Component {
         this.state = {
             card_class : "card white col s12 m12"
         }
-        // this.onHotelSelected = this.onHotelSelected.bind(this);
+        this.onSelectClick = this.onSelectClick.bind(this);
+        this.onUnselectClick = this.onUnselectClick.bind(this);
     }
 
-    // onHotelSelected() {
-    //
-    //     this.props.selectHotel(this.props.hotel_data, this.props.id, this.props.city);
-    //     this.props.action(this.props.id);
-    //
-    //     if(this.props.currentSelection[this.props.city]) {
-    //         var previouslySelectedHotel = this.props.currentSelection[this.props.city].selectedHotel;
-    //         if(previouslySelectedHotel) {
-    //             //check if hotel has been selected
-    //             if(previouslySelectedHotel == this.props.id) {
-    //                 this.setState({card_class : "card teal col s12 m12"});
-    //             }
-    //         }
-    //         else {
-    //             this.setState({card_class : "card white col s12 m12"});
-    //         }
-    //
-    //     }
-    //     else {
-    //         this.setState({card_class : "card white col s12 m12"});
-    //     }
-    // }
+    onSelectClick() {
+        this.setState({card_class : "card teal col s12 m12"});
+    }
+
+    onUnselectClick() {
+        this.setState({card_class : "card white col s12 m12"});
+    }
 
     render() {
         return (
@@ -52,8 +38,8 @@ class Event extends React.Component {
                         <p id="event_url"><b>Website: </b>{this.props.event_data['venue_url']}</p>
                     </div>
                     <div className="card-action">
-                        <a className="btn green">I like this Event</a>&nbsp;&nbsp;
-                        <a className="btn red">I do not like this Event</a>
+                        <a className="btn green" onClick={this.onSelectClick}>I like this Event</a>&nbsp;&nbsp;
+                        <a className="btn red" onClick={this.onUnselectClick}>I do not like this Event</a>
                     </div>
                 </div>
             </div>
@@ -62,9 +48,7 @@ class Event extends React.Component {
 }
 
 const mapStateToProps = ({ centralReducer }) => {
-    return ({
-        // currentSelection: centralReducer.currentSelection
-    });
+    return ({});
 }
 
 const mapDispatchToProps = (dispatch) => {
