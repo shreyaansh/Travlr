@@ -103,6 +103,21 @@ class JSONCache(db.Model):
         return '<location %r, data %r, preference %r>' % (self.location, self.data, self.preference)
 
 
+class ItineraryStorage(db.Model):
+    __tablename__="ItineraryStorage"
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    itinName=db.Column(db.String(200))
+    email = db.Column(db.String(50))
+    itinerary=db.Column(JSON)
+    def __init__(self, email, itinerary, itinName):
+        self.email = email
+        self.itinName = itinName
+        self.itinerary = itinerary
+
+    def __repr__(self):
+        return '<email %r, itinName %r, itinerary %r>' % (self.email, self.itinName, self.itinerary)
+
+
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
 
