@@ -232,7 +232,7 @@ def autocomplete(token):
 @app.route('/save-itin', methods=['POST'])
 def saveItinerary():
     token = request.get_json()
-    print(token['email'])
+    
 
     # Now request should have two things: 1. The user information, so we can correctly map the itinerary to the user
     # 2. Obviously, the itinerary in JSON format
@@ -262,9 +262,9 @@ def getTravelData():
         hotel_pref = ''
     else:
         hotel_pref = token['hotel_prefs'][0] + ' '
-    
+
     event_prefs = token['event_prefs']
-    
+
     start_dest = origin
     end_dest = destination
 
