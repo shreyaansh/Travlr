@@ -103,6 +103,21 @@ class JSONCache(db.Model):
         return '<location %r, data %r, preference %r>' % (self.location, self.data, self.preference)
 
 
+class ItineraryStorage(db.Model):
+    __tablename__="ItineraryStorage"
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    itinname=db.Column(db.String(200))
+    email = db.Column(db.String(50))
+    itinerary=db.Column(JSON)
+    def __init__(self, email, itinname, itinerary):
+        self.email = email
+        self.itinname = itinname
+        self.itinerary = itinerary
+
+    def __repr__(self):
+        return '<email %r, itinname %r, itinerary %r>' % (self.email, self.itinname, self.itinerary)
+
+
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
 google_maps = googlemaps.Client(key=constants.GOOGLE_MAPS_ID)
 
@@ -232,8 +247,14 @@ def autocomplete(token):
 @app.route('/save-itin', methods=['POST'])
 def saveItinerary():
     token = request.get_json()
-    
-
+    print("data adding")
+    #print(token['data']['itinerary'])
+    names="ItinTest"
+    reg = ItineraryStorage(token['data']['email'],names,token['data']['itinerary'])
+    print("added pref")
+    db.session.add(reg)
+    db.session.commit()
+    print("data added")
     # Now request should have two things: 1. The user information, so we can correctly map the itinerary to the user
     # 2. Obviously, the itinerary in JSON format
 
