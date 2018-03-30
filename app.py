@@ -184,13 +184,15 @@ def authenticate():
 
     return jsonify(ret_token)
 
-def fetch_hotels(place):
+def fetch_hotels(hotel_pref, place):
     geocode_result = google_maps.geocode(place)
     hotels = {}
-    query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword='hotels', radius=20000, types=['hotels'])
+    print('Keyword: ' + hotel_pref + 'hotels')
+    query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword=hotel_pref + 'hotels', radius=20000, types=['hotels'])
     for place in query_result.places:
         place.get_details()
         hotels[place.name] = place.details
+        print(hotels[place.name])
     return hotels
 
 @app.route('/feedback', methods=['POST'])
@@ -246,8 +248,13 @@ def getTravelData():
     stops = token['stops']
     destination = token['to_location']
 
-    hotel_pref = token['hotel_prefs'][0]
+    if token['hotel_prefs'] == 0:
+        hotel_pref = ''
+    else:
+        hotel_pref = token['hotel_prefs'][0] + ' '
+    
     event_prefs = token['event_prefs']
+    
     start_dest = origin
     end_dest = destination
 
@@ -269,7 +276,7 @@ def getTravelData():
                 data[start_dest]['hotels'] = {}
 
                 if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
-                    data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                    data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
                     clean_fetched_data(data[start_dest]['hotels'],start_dest)
                     jData = json.dumps(data[start_dest]["hotels"])
                     print("adding pref")
@@ -301,7 +308,7 @@ def getTravelData():
             data[start_dest]['hotels'] = {}
 
             if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
-                data[start_dest]['hotels'] = fetch_hotels(start_dest)
+                data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
                 clean_fetched_data(data[start_dest]['hotels'],start_dest)
                 jData = json.dumps(data[start_dest]["hotels"])
                 print("adding pref")
@@ -329,7 +336,7 @@ def getTravelData():
         data[start_dest]['hotels'] = {}
 
         if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
-            data[start_dest]['hotels'] = fetch_hotels(start_dest)
+            data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
             clean_fetched_data(data[start_dest]['hotels'],start_dest)
             jData = json.dumps(data[start_dest]["hotels"])
             print("adding pref")
@@ -355,7 +362,7 @@ def getTravelData():
     data[end_dest]['hotels'] = {}
 
     if not db.session.query(JSONCache).filter(JSONCache.location == end_dest, JSONCache.preference == hotel_pref).count():
-        data[end_dest]['hotels'] = fetch_hotels(start_dest)
+        data[end_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
         clean_fetched_data(data[end_dest]['hotels'],start_dest)
         jData = json.dumps(data[end_dest]["hotels"])
         print("adding pref")
