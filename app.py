@@ -148,10 +148,8 @@ def getEvents(city, event_prefs, year, month, day):
         category += cat.lower() + ','
 
     category = category[:-1]
-    print(category)
 
     url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&location=" + city + "&category=" + category + "&date=" + year + month + day + "00-" + year + month + day + "00"
-    print(url)
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     return data
@@ -167,7 +165,6 @@ def authenticate():
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
-        print("success")
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         userid = idinfo['sub']
         name = idinfo['name'].split(' ')
@@ -187,12 +184,10 @@ def authenticate():
 def fetch_hotels(hotel_pref, place):
     geocode_result = google_maps.geocode(place)
     hotels = {}
-    print('Keyword: ' + hotel_pref + 'hotels')
     query_result = google_places.nearby_search(lat_lng={'lat': geocode_result[0]['geometry']['location']['lat'], 'lng': geocode_result[0]['geometry']['location']['lng']}, keyword=hotel_pref + 'hotels', radius=20000, types=['hotels'])
     for place in query_result.places:
         place.get_details()
         hotels[place.name] = place.details
-        print(hotels[place.name])
     return hotels
 
 @app.route('/feedback', methods=['POST'])
