@@ -227,11 +227,13 @@ def autocomplete(token):
 @app.route('/save-itin', methods=['POST'])
 def saveItinerary():
     token = request.get_json()
+    print(token)
 
     # Now request should have two things: 1. The user information, so we can correctly map the itinerary to the user
     # 2. Obviously, the itinerary in JSON format
 
     # Add database calls here
+    return jsonify({"TEST" : "Success"})
 
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
