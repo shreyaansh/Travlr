@@ -142,8 +142,16 @@ def getWeather(city, year, month, day):
     forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
     return str(forecast.currently()).replace("<", "").replace(">", "")
 
-def getEvents(city, category, year, month, day):
-    url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&keywords=" + category + "&location=" + city + "&date=" + year + month + day + "00-" + year + month + day + "00"
+def getEvents(city, event_prefs, year, month, day):
+    category = ""
+    for cat in event_prefs:
+        category += cat.lower() + ','
+
+    category = category[:-1]
+    print(category)
+
+    url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&location=" + city + "&category=" + category + "&date=" + year + month + day + "00-" + year + month + day + "00"
+    print(url)
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     return data
@@ -257,7 +265,7 @@ def getTravelData():
                 data[start_dest]['stop'] = i + 1
                 data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
-                data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
+                data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
                 data[start_dest]['hotels'] = {}
 
                 if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
@@ -289,7 +297,7 @@ def getTravelData():
             data[start_dest]['stop'] = i + 1
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
-            data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
+            data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
             data[start_dest]['hotels'] = {}
 
             if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
@@ -317,7 +325,7 @@ def getTravelData():
         data[start_dest]['stop'] = 1
         data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
-        data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), 'music', str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
+        data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
         data[start_dest]['hotels'] = {}
 
         if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
@@ -343,7 +351,7 @@ def getTravelData():
     data[end_dest]['stop'] = stop + 1
     data[end_dest]['time_to_next'] = "N/a"
     data[end_dest]['distance_to_next'] = "N/a"
-    data[end_dest]['events'] = getEvents(end_dest.replace(" ", ""), 'music', str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)))
+    data[end_dest]['events'] = getEvents(end_dest.replace(" ", ""), event_prefs, str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)))
     data[end_dest]['hotels'] = {}
 
     if not db.session.query(JSONCache).filter(JSONCache.location == end_dest, JSONCache.preference == hotel_pref).count():
