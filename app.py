@@ -106,16 +106,16 @@ class JSONCache(db.Model):
 class ItineraryStorage(db.Model):
     __tablename__="ItineraryStorage"
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
-    itinName=db.Column(db.String(200))
+    itinname=db.Column(db.String(200))
     email = db.Column(db.String(50))
     itinerary=db.Column(JSON)
-    def __init__(self, email, itinerary, itinName):
+    def __init__(self, email, itinname, itinerary):
         self.email = email
-        self.itinName = itinName
+        self.itinname = itinname
         self.itinerary = itinerary
 
     def __repr__(self):
-        return '<email %r, itinName %r, itinerary %r>' % (self.email, self.itinName, self.itinerary)
+        return '<email %r, itinname %r, itinerary %r>' % (self.email, self.itinname, self.itinerary)
 
 
 google_places = GooglePlaces(constants.GOOGLE_MAPS_ID)
@@ -242,8 +242,14 @@ def autocomplete(token):
 @app.route('/save-itin', methods=['POST'])
 def saveItinerary():
     token = request.get_json()
-    print(token)
-
+    print("data adding")
+    #print(token['data']['itinerary'])
+    names="ItinTest"
+    reg = ItineraryStorage(token['data']['email'],names,token['data']['itinerary'])
+    print("added pref")
+    db.session.add(reg)
+    db.session.commit()
+    print("data added")
     # Now request should have two things: 1. The user information, so we can correctly map the itinerary to the user
     # 2. Obviously, the itinerary in JSON format
 
@@ -264,9 +270,9 @@ def getTravelData():
         hotel_pref = ''
     else:
         hotel_pref = token['hotel_prefs'][0] + ' '
-    
+
     event_prefs = token['event_prefs']
-    
+
     start_dest = origin
     end_dest = destination
 
