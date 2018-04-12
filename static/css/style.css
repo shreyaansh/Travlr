@@ -1,0 +1,53 @@
+#main_form {
+    background-image: url("/assets/main_banner.jpeg");
+    background-size: cover;
+}
+
+#feedback_input {
+    height: 150px;
+    border: dotted;
+}
+
+#hero_line {
+    font-family: 'Anton', sans-serif;
+    font-size: 50px;
+}
+#hero_steps {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+}
+#form_user_name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+}
+
+#form_div input{
+    color: white;
+}
+
+#nav_logo{
+    width: 185px;
+    padding: 10px;
+}
+
+#hotel_cards_div{
+    border: solid 1px;
+    max-height: 450px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#hotel_card {
+    position: relative;
+}
+
+#event_cards_div{
+    border: solid 1px;
+    max-height: 450px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#event_card {
+    position: relative;
+}
