@@ -35,10 +35,12 @@ class User(db.Model):
     firstname=db.Column(db.String(50))
     lastname=db.Column(db.String(50))
     email = db.Column(db.String(50), unique=True)
+    isdeveloper = db.Column(db.Boolean)
     def __init__(self, email,firstname,lastname):
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+        self.isdeveloper=False
 
     def __repr__(self):
         return '<email %r, firstname %r, lastname %r>' % (self.email,self.firstname,self.lastname)
