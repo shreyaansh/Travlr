@@ -11,7 +11,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
-import forecastio
+#import forecastio
+from darksky import forecast
 import simplejson as json
 from sqlalchemy.dialects.postgresql.json import JSON
 import sys
@@ -157,12 +158,17 @@ def send_css(path):
 
 @app.route("/weather/<city>/<year>/<month>/<day>")
 def getWeather(city, year, month, day):
+    key = "5542c5bc0d6398ec832014be585b83b8"
     city.replace("-", " ")
     geolocator = Nominatim()
     location = geolocator.geocode(city)
-    mydate = dt(int(year), int(month), int(day))
-    forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
-    return str(forecast.currently()).replace("<", "").replace(">", "")
+    mydate = dt(int(year), int(month), int(day)).isoformat()
+    CITY = key, location.latitude, location.longitude
+    city = forecast(*CITY, time=mydate)
+    return str(city.temperature)
+    #forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
+    #currently = forecast.daily()
+    #return str(currently.summary) + "<br>" + str(currently.icon) + "<br>" + str(currently.data)
 
 def getEvents(city, event_prefs, year, month, day):
     category = ""
