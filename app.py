@@ -171,6 +171,17 @@ def getWeather(city, year, month, day, info):
         return str(city.precipProbability)
     elif info == "temperature":
         return str(city.temperature)
+    elif info == "clothing":
+        temperature = city.temperature
+        precipProb = city.precipProbability
+        clothing = "no extra clothing"
+        if temperature <= 40 and precipProb >= 0.5:
+            clothing = "winter coat\n<br>rain jacket"
+        elif temperature <= 40:
+            clothing = "winter coat"
+        elif precipProb >= 0.5:
+            clothing = "rain jacket"
+        return clothing
     else:
         return "last input <info> must be 'summary', 'precipProb', or 'temperature'"
     return str(city.summary) + "<br>" + str(city.precipProbability) + "<br>" + str(city.temperature)
