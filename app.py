@@ -156,8 +156,8 @@ def send_assets(path):
 def send_css(path):
     return send_from_directory('static/css', path)
 
-@app.route("/weather/<city>/<year>/<month>/<day>")
-def getWeather(city, year, month, day):
+@app.route("/weather/<city>/<year>/<month>/<day>/<info>")
+def getWeather(city, year, month, day, info):
     key = "5542c5bc0d6398ec832014be585b83b8"
     city.replace("-", " ")
     geolocator = Nominatim()
@@ -165,7 +165,15 @@ def getWeather(city, year, month, day):
     mydate = dt(int(year), int(month), int(day)).isoformat()
     CITY = key, location.latitude, location.longitude
     city = forecast(*CITY, time=mydate)
-    return str(city.temperature)
+    if info == "summary":
+        return str(city.summary)
+    elif info == "precipProb":
+        return str(city.precipProbability)
+    elif info == "temperature":
+        return str(city.temperature)
+    else:
+        return "last input <info> must be 'summary', 'precipProb', or 'temperature'"
+    return str(city.summary) + "<br>" + str(city.precipProbability) + "<br>" + str(city.temperature)
     #forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
     #currently = forecast.daily()
     #return str(currently.summary) + "<br>" + str(currently.icon) + "<br>" + str(currently.data)
