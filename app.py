@@ -6,7 +6,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from googleplaces import GooglePlaces, types, lang
 from constants import constants
-from datetime import datetime
+from datetime import datetime as dt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
@@ -160,7 +160,7 @@ def getWeather(city, year, month, day):
     city.replace("-", " ")
     geolocator = Nominatim()
     location = geolocator.geocode(city)
-    mydate = datetime.datetime(int(year), int(month), int(day))
+    mydate = dt(int(year), int(month), int(day))
     forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
     return str(forecast.currently()).replace("<", "").replace(">", "")
 
