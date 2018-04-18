@@ -228,7 +228,7 @@ def fetch_hotels(hotel_pref, place):
     return hotels
 
 @app.route('/feedback', methods=['POST'])
-def getFeedback():
+def submitFeedback():
     feedback_token = request.get_json()
     email=feedback_token['email']
     message=feedback_token['message']
@@ -284,6 +284,10 @@ def getItineraries():
     print(token)
 
     # Add db call here to fetch itin based on user email
+    return jsonify({"Test": "Success"})
+
+@app.route('/get-feedback', methods=['POST'])
+def getFeedback():
     return jsonify({"Test": "Success"})
 
 @app.route('/travel-form', methods=['POST'])
