@@ -184,9 +184,6 @@ def getWeather(city, year, month, day, info):
     else:
         return "last input <info> must be 'summary', 'precipProb', or 'temperature'"
     return str(city.summary) + "<br>" + str(city.precipProbability) + "<br>" + str(city.temperature)
-    #forecast = forecastio.load_forecast("5542c5bc0d6398ec832014be585b83b8", location.latitude, location.longitude, time=mydate)
-    #currently = forecast.daily()
-    #return str(currently.summary) + "<br>" + str(currently.icon) + "<br>" + str(currently.data)
 
 def getEvents(city, event_prefs, year, month, day):
     category = ""
