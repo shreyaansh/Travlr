@@ -362,6 +362,9 @@ def getTravelData():
             data[start_dest]['time_to_next'] = distance_matrix['rows'][0]['elements'][0]['duration']['text']
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
             data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
+            data[start_dest]['weather_summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
+            data[start_dest]['weather_temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
+            data[start_dest]['weather_clothing'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "clothing")
             data[start_dest]['hotels'] = {}
 
             if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
