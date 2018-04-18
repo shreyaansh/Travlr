@@ -228,7 +228,7 @@ def fetch_hotels(hotel_pref, place):
     return hotels
 
 @app.route('/feedback', methods=['POST'])
-def getFeedback():
+def submitFeedback():
     feedback_token = request.get_json()
     email=feedback_token['email']
     message=feedback_token['message']
