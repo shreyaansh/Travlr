@@ -271,6 +271,10 @@ def getItineraries():
     # Add db call here to fetch itin based on user email
     return jsonify({"Test": "Success"})
 
+@app.route('/get-feedback', methods=['POST'])
+def getFeedback():
+    return jsonify({"Test": "Success"})
+
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
