@@ -33,6 +33,7 @@ class Location extends React.Component {
         var identifier = uuidv1();
         Object.keys(locations[this.props.location_name].hotels).forEach((hotel) => hotels.push(hotel));
         var events = locations[this.props.location_name].events.events.event;
+        var weather_summary = locations[this.props.location_name].weather_summary;
 
         return (
             <div className="row">
@@ -40,6 +41,7 @@ class Location extends React.Component {
                     <div className="card white" id="location_card">
                         <div className="card-content black-text">
                             <span className="card-title"><b>{this.props.location_name.toUpperCase()}</b></span>
+                            <h3>{weather_summary}</h3>
                             <h5>Select a Hotel</h5>
                             <br />
                             <div id="hotel_cards_div">
