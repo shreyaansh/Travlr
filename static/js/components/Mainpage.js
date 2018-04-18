@@ -185,7 +185,7 @@ class Mainpage extends React.Component {
                                 </div>
                             </div>
                             <div className="card-action orange accent-4">
-                                <a onClick={this.getFormData} className="white-text">Generate Itinerary</a>
+                                <a onClick={this.getFormData} className="white-text" id="generateButtonDiv">Generate Itinerary</a>
                             </div>
                         </div>
                     </div>
