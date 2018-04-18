@@ -197,7 +197,22 @@ def authenticate():
             db.session.commit()
 
         userid = idinfo['sub']
-        return jsonify(ret_token)
+
+        sqlq='Select isdeveloper from "public"."Users" where email like \'%s\'' %(idinfo['email'])
+        #print(sqlq)
+        result = db.engine.execute(sqlq)
+        print("123")
+        developerdict={}
+        for row in result:
+            print(row.isdeveloper)
+            developerdict['isDeveloper'] =  str(row.isdeveloper)
+            print(row.isdeveloper)
+            break
+        #print("developer dict")
+        #print(developerdict)
+        print(jsonify(developerdict))
+        return jsonify(developerdict)
+        #return jsonify(ret_token)
     except ValueError:
         pass
 

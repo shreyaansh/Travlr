@@ -8,3 +8,4 @@ constants/*.pyc
 static/package-lock.json
 .DS_Store
 static/.DS_Store
+requirements.txt
