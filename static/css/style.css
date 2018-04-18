@@ -51,3 +51,7 @@
 #event_card {
     position: relative;
 }
+
+#generateButtonDiv {
+    cursor: pointer;
+}
