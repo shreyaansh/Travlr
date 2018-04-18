@@ -204,13 +204,15 @@ def authenticate():
         print("123")
         developerdict={}
         for row in result:
-            print(row.isdeveloper)
+            #print(row.isdeveloper)
             developerdict['isDeveloper'] =  str(row.isdeveloper)
-            print(row.isdeveloper)
+            #print(row.isdeveloper)
             break
         #print("developer dict")
         #print(developerdict)
-        print(jsonify(developerdict))
+        #print(jsonify(developerdict))
+
+
         return jsonify(developerdict)
         #return jsonify(ret_token)
     except ValueError:
@@ -236,6 +238,7 @@ def submitFeedback():
     db.session.add(reg)
     db.session.commit()
     ret_token = { "status" : "Feedback submitted" }
+
     return jsonify(ret_token)
 
 @app.route('/autocomplete/<token>', methods=['GET'])
@@ -288,7 +291,21 @@ def getItineraries():
 
 @app.route('/get-feedback', methods=['POST'])
 def getFeedback():
-    return jsonify({"Test": "Success"})
+    sqlq='Select * from "public"."Feedback"'
+    print(sqlq)
+    result = db.engine.execute(sqlq)
+    #print("123")
+    FeedbackDict={}
+    for row in result:
+        #print(row.email)
+        #print(row.id)
+        #print(row.feedbacktext)
+        if row.email not in FeedbackDict:
+            FeedbackDict[row.email]={}
+        FeedbackDict[row.email][row.id] =  str(row.feedbacktext)
+    #print(jsonify(FeedbackDict))
+    #return jsonify(ret_token)
+    return jsonify(FeedbackDict)
 
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
