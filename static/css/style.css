@@ -55,3 +55,7 @@
 #generateButtonDiv {
     cursor: pointer;
 }
+
+#developer_btn {
+    width: 100%;
+}
