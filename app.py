@@ -11,7 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
 from geopy.geocoders import Nominatim
-#import forecastio
 from darksky import forecast
 import simplejson as json
 from sqlalchemy.dialects.postgresql.json import JSON
@@ -299,8 +298,8 @@ def getItineraries():
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
     token = request.get_json()
-    from_date = datetime.strptime(token['from_date'], '%m-%d-%Y')
-    to_date = datetime.strptime(token['to_date'], '%m-%d-%Y')
+    from_date = dt.strptime(token['from_date'], '%m-%d-%Y')
+    to_date = dt.strptime(token['to_date'], '%m-%d-%Y')
 
     origin = token['from_location']
     stops = token['stops']

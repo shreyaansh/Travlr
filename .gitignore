@@ -2,9 +2,10 @@ venv
 *.pyc
 staticfiles
 .ev
-static/node_modules
 constants/*.pyc
 .idea/
-static/package-lock.json
 .DS_Store
+static/package-lock.json
+static/dist/bundle.js
 static/.DS_Store
+static/node_modules
