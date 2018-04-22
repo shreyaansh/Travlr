@@ -166,6 +166,8 @@ def getWeather(city, year, month, day, info):
     city = forecast(*CITY, time=mydate)
     if info == "summary":
         return str(city.summary)
+    elif info == "icon":
+        return str(city.icon)
     elif info == "precipProb":
         return str(city.precipProbability)
     elif info == "temperature":
@@ -173,14 +175,20 @@ def getWeather(city, year, month, day, info):
     elif info == "clothing":
         temperature = city.temperature
         precipProb = city.precipProbability
-        clothing = "no extra clothing"
+        clothing = "No Extra Clothing"
         if temperature <= 40 and precipProb >= 0.5:
-            clothing = "winter coat, rain jacket"
+            clothing = "Winter Coat, Rain Jacket"
         elif temperature <= 40:
-            clothing = "winter coat"
+            clothing = "Winter Coat"
         elif precipProb >= 0.5:
-            clothing = "rain jacket"
+            clothing = "Rain Jacket"
         return clothing
+    elif info == 'severe':
+        precipProb = city.precipProbability
+        if precipProb >= 0.9:
+            return "Severe Weather Warning"
+        else:
+            return "No Severe Weather"
     else:
         return "last input <info> must be 'summary', 'precipProb', or 'temperature'"
     return str(city.summary) + "<br>" + str(city.precipProbability) + "<br>" + str(city.temperature)
@@ -331,6 +339,9 @@ def getTravelData():
                 data[start_dest]['weather_summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
                 data[start_dest]['weather_temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
                 data[start_dest]['weather_clothing'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "clothing")
+                data[start_dest]['weather_icon'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "icon")
+                data[start_dest]['weather_severe'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "severe")
+
 
                 if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
                     data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
@@ -366,6 +377,8 @@ def getTravelData():
             data[start_dest]['weather_summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
             data[start_dest]['weather_temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
             data[start_dest]['weather_clothing'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "clothing")
+            data[start_dest]['weather_icon'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "icon")
+            data[start_dest]['weather_severe'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "severe")
 
             if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
                 data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
@@ -397,6 +410,8 @@ def getTravelData():
         data[start_dest]['weather_summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
         data[start_dest]['weather_temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
         data[start_dest]['weather_clothing'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "clothing")
+        data[start_dest]['weather_icon'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "icon")
+        data[start_dest]['weather_severe'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "severe")
 
         if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
             data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
@@ -426,6 +441,8 @@ def getTravelData():
     data[end_dest]['weather_summary'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "summary")
     data[end_dest]['weather_temperature'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "temperature")
     data[end_dest]['weather_clothing'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "clothing")
+    data[end_dest]['weather_icon'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "icon")
+    data[end_dest]['weather_severe'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "severe")
 
     if not db.session.query(JSONCache).filter(JSONCache.location == end_dest, JSONCache.preference == hotel_pref).count():
         data[end_dest]['hotels'] = fetch_hotels(hotel_pref, end_dest)
