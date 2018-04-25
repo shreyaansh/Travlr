@@ -237,7 +237,24 @@ def authenticate():
             db.session.commit()
 
         userid = idinfo['sub']
-        return jsonify(ret_token)
+
+        sqlq='Select isdeveloper from "public"."Users" where email like \'%s\'' %(idinfo['email'])
+        #print(sqlq)
+        result = db.engine.execute(sqlq)
+        print("123")
+        developerdict={}
+        for row in result:
+            #print(row.isdeveloper)
+            developerdict['isDeveloper'] =  str(row.isdeveloper)
+            #print(row.isdeveloper)
+            break
+        #print("developer dict")
+        #print(developerdict)
+        #print(jsonify(developerdict))
+
+
+        return jsonify(developerdict)
+        #return jsonify(ret_token)
     except ValueError:
         pass
 
@@ -253,7 +270,7 @@ def fetch_hotels(hotel_pref, place):
     return hotels
 
 @app.route('/feedback', methods=['POST'])
-def getFeedback():
+def submitFeedback():
     feedback_token = request.get_json()
     email=feedback_token['email']
     message=feedback_token['message']
@@ -261,6 +278,7 @@ def getFeedback():
     db.session.add(reg)
     db.session.commit()
     ret_token = { "status" : "Feedback submitted" }
+
     return jsonify(ret_token)
 
 @app.route('/autocomplete/<token>', methods=['GET'])
@@ -310,6 +328,24 @@ def getItineraries():
 
     # Add db call here to fetch itin based on user email
     return jsonify({"Test": "Success"})
+
+@app.route('/get-feedback', methods=['POST'])
+def getFeedback():
+    sqlq='Select * from "public"."Feedback"'
+    print(sqlq)
+    result = db.engine.execute(sqlq)
+    #print("123")
+    FeedbackDict={}
+    for row in result:
+        #print(row.email)
+        #print(row.id)
+        #print(row.feedbacktext)
+        if row.email not in FeedbackDict:
+            FeedbackDict[row.email]={}
+        FeedbackDict[row.email][row.id] =  str(row.feedbacktext)
+    #print(jsonify(FeedbackDict))
+    #return jsonify(ret_token)
+    return jsonify(FeedbackDict)
 
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
@@ -407,8 +443,8 @@ def getTravelData():
                     datadict[start_dest] =  json.loads(str(row.data))
                 data[start_dest]['hotels'] = datadict[start_dest]
 
-            start_dest = stops[i]
             temp_hotels[start_dest] = data[start_dest]['hotels']
+            start_dest = stops[i]
     else:
         distance_matrix = google_maps.distance_matrix(origin, destination)
         data[start_dest] = {}
