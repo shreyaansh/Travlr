@@ -18,17 +18,37 @@ class Mainpage extends React.Component {
         var stops = [];
         var hotel_prefs = [];
         var event_prefs = [];
+        var stop_days = [];
+        var stop_data = [];
 
         var form_div = Array.from($("#form_div input"));
-        form_div.forEach(function(input){
-            if(input.id === "stop_location")
+        form_div.forEach(function(input) {
+            if (input.id === "stop_location") {
                 stops.push(input.value);
+            }
             else {
                 form_data[input.id] = input.value;
+            }
+
+            if (input.id === "stop_location" || input.id === "from_location" || input.id === "to_location") {
+                stop_data.push(input.value);
+                var loc_object = {};
+                loc_object[input.value] = 0;
+                stop_days.push(loc_object);
+            }
+        });
+
+        // Add Stop Days
+        var counter = 0;
+        form_div.forEach(function(input){
+            if(input.id === "stop_days"){
+                stop_days[counter][stop_data[counter]] = input.value;
+                counter++;
             }
         });
 
         form_data['stops'] = stops;
+        form_data['stop_days'] = stop_days;
 
         var prefHotel = Array.from(document.getElementsByClassName('hotel_pref'));
         var prefEvent = Array.from(document.getElementsByClassName('event_pref'));
@@ -219,23 +239,23 @@ class Mainpage extends React.Component {
 }
 
 function add_stop_field() {
-var parent_div = document.getElementById('stop_fields');
-var stop_field_div = document.createElement('div');
-stop_field_div.className = "row";
+    var parent_div = document.getElementById('stop_fields');
+    var stop_field_div = document.createElement('div');
+    stop_field_div.className = "row";
 
-var new_stop = document.createElement('div');
-new_stop.className = 'input-field col s8';
-new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
-		"p</label>";
+    var new_stop = document.createElement('div');
+    new_stop.className = 'input-field col s8';
+    new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
+            "p</label>";
 
-var stop_days = document.createElement('div');
-stop_days.className = 'input-field col s2';
-stop_days.innerHTML = "<input id=\"stop_days\" type=\"text\">\n<label for=\"stop_days\">Days</label>"
+    var stop_days = document.createElement('div');
+    stop_days.className = 'input-field col s2';
+    stop_days.innerHTML = "<input id=\"stop_days\" type=\"text\">\n<label for=\"stop_days\">Days</label>"
 
-var remove_btn = document.createElement('div');
-remove_btn.className = "col s2";
-remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
-            "top_field(this)\"><i class=\"material-icons left\">clear</i></a>";
+    var remove_btn = document.createElement('div');
+    remove_btn.className = "col s2";
+    remove_btn.innerHTML = "<a class=\"btn-floating btn-flat red\" id=\"remove_stop\" onclick=\"remove_s" +
+                "top_field(this)\"><i class=\"material-icons left\">clear</i></a>";
 
     stop_field_div.appendChild(new_stop);
     stop_field_div.appendChild(stop_days);
