@@ -193,7 +193,9 @@ def getWeather(city, year, month, day, info):
             clothing = "Rain Jacket"
         return clothing
     elif info == 'severe':
-        precipProb = city.precipProbability
+        precipProb = -1
+        if diff.days <= 6:
+            precipProb = city.precipProbability
         if precipProb >= 0.9:
             return "Severe Weather Warning"
         else:
