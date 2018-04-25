@@ -289,6 +289,16 @@ def getItineraries():
     # Add db call here to fetch itin based on user email
     return jsonify({"Test": "Success"})
 
+@app.route('/delete-feedback', methods=['POST'])
+def deleteFeedback():
+    token = request.get_json()
+    print(token)
+    feedid = token['feedback-id']
+    sqlq = 'Delete from "public"."Feedback" where id = %d' %(feedid)
+    print(sqlq)
+    result = db.engine.execute(sqlq)
+    return jsonify({"Test": "Success"})
+
 @app.route('/get-feedback', methods=['POST'])
 def getFeedback():
     sqlq='Select * from "public"."Feedback"'
