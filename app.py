@@ -7,6 +7,7 @@ from google.auth.transport import requests
 from googleplaces import GooglePlaces, types, lang
 from constants import constants
 from datetime import datetime as dt
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Sequence
 from sqlalchemy import types
@@ -161,7 +162,10 @@ def getWeather(city, year, month, day, info):
     city.replace("-", " ")
     geolocator = Nominatim()
     location = geolocator.geocode(city)
-    mydate = dt(int(year), int(month), int(day)).isoformat()
+    premydate = dt(int(year), int(month), int(day))
+    mydate = premydate.isoformat()
+    now = dt.now()
+    diff = premydate - now
     CITY = key, location.latitude, location.longitude
     city = forecast(*CITY, time=mydate)
     if info == "summary":
@@ -169,12 +173,17 @@ def getWeather(city, year, month, day, info):
     elif info == "icon":
         return str(city.icon)
     elif info == "precipProb":
-        return str(city.precipProbability)
+        if diff.days <= 6:
+            return str(city.precipProbability)
+        else:
+            return str(-1)
     elif info == "temperature":
         return str(city.temperature)
     elif info == "clothing":
         temperature = city.temperature
-        precipProb = city.precipProbability
+        precipProb = -1
+        if diff.days <= 6:
+            precipProb = city.precipProbability
         clothing = "No Extra Clothing"
         if temperature <= 40 and precipProb >= 0.5:
             clothing = "Winter Coat, Rain Jacket"
@@ -341,7 +350,6 @@ def getTravelData():
                 data[start_dest]['weather_clothing'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "clothing")
                 data[start_dest]['weather_icon'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "icon")
                 data[start_dest]['weather_severe'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "severe")
-
 
                 if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
                     data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
