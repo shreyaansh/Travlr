@@ -14,6 +14,7 @@ import postUserInfo from '../actions/action_post_user_info';
 import constants from '../../../constants/constants';
 import Feedback from "./Feedback";
 import Developer from "./Developer";
+import DeveloperPage from './DeveloperPage';
 
 const clientId = "";
 
@@ -104,6 +105,11 @@ class App extends React.Component {
         else if (this.props.renderer == 'itinerary_page') {
 			return (
 				<Itinerary />
+			)
+		}
+		else if (this.props.renderer == 'dev_page') {
+			return (
+				<DeveloperPage />
 			)
 		}
 	}

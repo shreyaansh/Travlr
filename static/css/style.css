@@ -59,3 +59,15 @@
 #developer_btn {
     width: 100%;
 }
+
+#userTableDiv {
+    width: 500px;
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: dotted;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px;
+}

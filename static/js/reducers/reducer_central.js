@@ -17,6 +17,13 @@ function centralReducer(state = initialState, action) {
                 currentSelection: state.currentSelection
 
             });
+        case "PAGE_RENDER_CHANGE_DEV":
+            return ({
+                renderer: "dev_page",
+                items: state.items,
+                currentSelection: state.currentSelection
+
+            });
         case "POST_USER_INFO":
             console.log("ACTION: USER INFO POSTED");
             return state;

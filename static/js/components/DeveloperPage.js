@@ -2,43 +2,71 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from "axios";
+import constants from "../../../constants/constants";
 
 class DeveloperPage extends React.Component {
 
     constructor (props) {
         super(props);
+        this.getFeedback = this.getFeedback.bind(this);
+    }
+
+    componentDidMount() {
+        this.getFeedback();
+    }
+
+    getFeedback() {
+        axios.get(constants.routeUrl + 'get-feedback').then(res => {
+            console.log("DATA RECEIVED:" + res);
+            createFeedback(res.data);
+        });
     }
 
     render() {
 
         return (
-            <div className="row">
-                <div className="col s12 m12">
-                    <div className="card white" id="location_card">
-                        <div className="card-content black-text">
-                            <span className="card-title"><b>{this.props.location_name.toUpperCase()}</b></span>
-                            <h5>Select a Hotel</h5>
-                            <br />
-                            <div id="hotel_cards_div">
-                                {hotels.map((hotel) => <Hotel action={this.handler} key={hotel} id={hotel.toString()} city={this.props.location_name.toLowerCase()} hotel_data={locations[this.props.location_name].hotels[hotel]}/>)}
-                            </div>
-                            <h5>Select Events</h5>
-                            <br />
-                            <div id="event_cards_div">
-                                {events.map((event) => <Event key={event['id']} id={event['id']} city={this.props.location_name.toLowerCase()} event_data={event} />)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div className="row" id="feedback_div">
             </div>
         );
     }
 }
 
+function createFeedback(feedback) {
+    console.log(feedback);
+    var feedback_div = document.getElementById('feedback_div');
+
+    for(var key in feedback){
+        console.log(key);
+        var userTableDiv = document.createElement("div");
+        userTableDiv.id = "userTableDiv";
+
+        var userTable = document.createElement("TABLE");
+        userTable.className = "striped";
+        userTable.id = "feedback_table";
+        var userCaption = userTable.createCaption();
+        userCaption.innerHTML = "<b>" + key + "</b>";
+        // var userNameRow = userTable.insertRow(-1);
+        // var userNameCell = userNameRow.insertCell(0);
+        // userNameCell.innerHTML = "<b>" + key + "</b>";
+
+        for(var feed in feedback[key]){
+            var userDataRow = userTable.insertRow(-1);
+
+            var userDataIdCell = userDataRow.insertCell(0);
+            userDataIdCell.innerHTML = "<b>" + feed + "</b>";
+            var userDataCell = userDataRow.insertCell(1);
+            userDataCell.innerHTML = feedback[key][feed];
+            var userDeleteCell = userDataRow.insertCell(2);
+            userDeleteCell.innerHTML = "<a class=\"btn red\" id=\"delete_feedback\" onclick=\"OnDeleteFeedback(this)\">Delete</a>";
+        }
+
+        userTableDiv.appendChild(userTable);
+        feedback_div.appendChild(userTableDiv);
+    }
+}
+
 const mapStateToProps = ({ centralReducer }) => {
-    return ({
-        items: centralReducer.items
-    });
+    return ({});
 }
 
 const mapDispatchToProps = (dispatch) => {
