@@ -45,13 +45,10 @@ function createFeedback(feedback) {
         userTable.id = "feedback_table";
         var userCaption = userTable.createCaption();
         userCaption.innerHTML = "<b>" + key + "</b>";
-        // var userNameRow = userTable.insertRow(-1);
-        // var userNameCell = userNameRow.insertCell(0);
-        // userNameCell.innerHTML = "<b>" + key + "</b>";
 
         for(var feed in feedback[key]){
             var userDataRow = userTable.insertRow(-1);
-
+            userDataRow.id = feed;  // Set unique id as row id for deleting feedback
             var userDataIdCell = userDataRow.insertCell(0);
             userDataIdCell.innerHTML = "<b>" + feed + "</b>";
             var userDataCell = userDataRow.insertCell(1);

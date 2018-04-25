@@ -285,8 +285,32 @@ def saveItinerary():
 def getItineraries():
     token = request.get_json()
     print(token)
+    email = token['email']
+    sqlq = 'Select * from "public"."ItineraryStorage" where email =\'%s\''%(email)
+    result = db.engine.execute(sqlq)
 
+    ItinDict={}
+    for row in result:
+        #print(row.email)
+        #print(row.id)
+        #print(row.feedbacktext)
+        if row.email not in FeedbackDict:
+            ItinDict[row.email]={}
+        ItinDict[row.email][row.id] =  json.loads(str(row.itinerary))
+    #print(jsonify(FeedbackDict))
+    #return jsonify(ret_token)
+    return jsonify(ItinDict)
     # Add db call here to fetch itin based on user email
+    #return jsonify({"Test": "Success"})
+
+@app.route('/delete-feedback', methods=['POST'])
+def deleteFeedback():
+    token = request.get_json()
+    print(token)
+    feedid = token['feedback-id']
+    sqlq = 'Delete from "public"."Feedback" where id = %d' %(feedid)
+    print(sqlq)
+    result = db.engine.execute(sqlq)
     return jsonify({"Test": "Success"})
 
 @app.route('/get-feedback', methods=['GET'])
@@ -393,8 +417,8 @@ def getTravelData():
                     datadict[start_dest] =  json.loads(str(row.data))
                 data[start_dest]['hotels'] = datadict[start_dest]
 
-            start_dest = stops[i]
             temp_hotels[start_dest] = data[start_dest]['hotels']
+            start_dest = stops[i]
     else:
         distance_matrix = google_maps.distance_matrix(origin, destination)
         data[start_dest] = {}
