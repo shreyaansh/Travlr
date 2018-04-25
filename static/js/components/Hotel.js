@@ -10,39 +10,32 @@ class Hotel extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            card_class : "card white col s12 m12"
+            card_class : "card white col s12 m12",
+            text_class: "card-content black-text"
         }
         this.onHotelSelected = this.onHotelSelected.bind(this);
+        this.onHotelUnselected = this.onHotelUnselected.bind(this);        
     }
 
     onHotelSelected() {
-
+    
+        // this.props.action(this.props.id);
         this.props.selectHotel(this.props.hotel_data, this.props.id, this.props.city);
-        this.props.action(this.props.id);
+        this.setState({card_class : "card teal col s12 m12"});
+        this.setState({text_class: "card-content white-text"});        
 
-        if(this.props.currentSelection.itinerary[this.props.city]) {
-            var previouslySelectedHotel = this.props.currentSelection.itinerary[this.props.city].selectedHotel;
-            if(previouslySelectedHotel) {
-                //check if hotel has been selected
-                if(previouslySelectedHotel == this.props.id) {
-                    this.setState({card_class : "card teal col s12 m12"});                    
-                }
-            }
-            else {
-                this.setState({card_class : "card white col s12 m12"});                
-            }
-                
-        }
-        else {
-            this.setState({card_class : "card white col s12 m12"});
-        }
+    }
+
+    onHotelUnselected() {
+        this.setState({card_class : "card white col s12 m12"});
+        this.setState({text_class: "card-content black-text"});                
     }
 
     render() {
         return (
             <div className="row">
-                <div className={this.props.selectedHotel} id="hotel_card">
-                    <div className="card-content black-text">
+                <div className={this.state.card_class} id="hotel_card">
+                    <div className={this.state.text_class}>
                         <span className="card-title" id="hotel_name">{this.props.hotel_data['name']}</span>
                         <p id="hotel_address">{this.props.hotel_data['formatted_address']}</p>
                         <p id="hotel_website"><b>Website: </b>{this.props.hotel_data['website']}</p>
@@ -50,7 +43,8 @@ class Hotel extends React.Component {
                         <p id="hotel_rating"><b>Rating: </b>{this.props.hotel_data['rating']}</p>
                     </div>
                     <div className="card-action">
-                        <a className="btn green" onClick={this.onHotelSelected}>Select this Hotel</a>
+                        <a className="btn green" onClick={this.onHotelSelected}>Select this Hotel</a>&nbsp;&nbsp;
+                        <a className="btn red" onClick={this.onHotelUnselected}>Unselect Hotel</a>
                     </div>
                 </div>
             </div>

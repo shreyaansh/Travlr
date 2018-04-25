@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import axios from "axios";
 import constants from "../../../constants/constants"
 import fetchItems from "../actions/action_fetch_items"
+import preloader from "../actions/action_preloader_itin"
 
 class Mainpage extends React.Component {
 
@@ -11,6 +12,7 @@ class Mainpage extends React.Component {
         super(props);
         this.getFormData = this.getFormData.bind(this);
         this.validateDates = this.validateDates.bind(this);
+        this.displayPreloader = this.displayPreloader.bind(this);
     }
 
     validateDates(total_days, from_date, to_date) {
@@ -33,6 +35,10 @@ class Mainpage extends React.Component {
     }
 
     getFormData() {
+
+        //Preloader
+        this.props.preloader();
+
         var form_data = {};
         var stops = [];
         var hotel_prefs = [];
@@ -114,12 +120,31 @@ class Mainpage extends React.Component {
 
     }
 
+    displayPreloader() {
+        console.log("Preloader: ", this.props.preloaderState);
+        if(this.props.preloaderState == "loading") {
+                // <a class="btn-floating pulse orange accent-2">
+                //     <i class="material-icons">fiber_manual_record</i>
+                // </a>
+            return(
+                <div className="progress black accent-3">
+                    <div className="indeterminate orange"></div>
+                </div>
+            );
+        }
+        else {
+            return(
+                <div></div>
+            );
+        }
+    }
+
     render() {
         return (
             <div>
-                <div className="row" id="main_form">
+                <div className="row animated fadeIn" id="main_form">
                     <div className="col s12 m6">
-                        <div className="card blue-grey darken-4">
+                        <div className="card blue-grey darken-4 animated fadeInLeft">
                             <div className="card-content white-text">
 
                                 <span id="form_user_name">Hi, {this.props.nameProp}</span>
@@ -233,10 +258,14 @@ class Mainpage extends React.Component {
                                 </div>
                             </div>
                             <div className="card-action orange accent-4">
-                                <a onClick={this.getFormData} className="white-text" id="generateButtonDiv">Generate Itinerary</a>
+                                <a onClick={this.getFormData} className="white-text" id="generateButtonDiv">Generate Itinerary</a>&nbsp;
+                                
                             </div>
+                            {this.displayPreloader()}
                         </div>
+                        
                     </div>
+                    
                 </div>
 
                 <div className="row">
@@ -294,12 +323,13 @@ function add_stop_field() {
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        items: centralReducer.items
+        items: centralReducer.items,
+        preloaderState: centralReducer.preloader
     });
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({fetchItems}, dispatch);
+    return bindActionCreators({fetchItems, preloader}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mainpage);

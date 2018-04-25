@@ -6,7 +6,6 @@ import Mainpage from './Mainpage';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Options from './Options';
-import Itinerary from './Itinerary'
 
 import goToLogin from '../actions/action_select_login';
 import goToMain from '../actions/action_select_main';
@@ -68,7 +67,7 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div className="animated fadeIn">
+			<div>
 				<Navbar navProps={this.navProps()}/>
 				{/*<Mainpage nameProp={this.nameHandler()} />*/}
 				{this.renderSelector()}
@@ -79,21 +78,7 @@ class App extends React.Component {
 	}
 
 	renderSelector() {
-		if (this.props.renderer == 'main_page') {
-            return (
-				<Mainpage nameProp={this.nameHandler()} />
-            );
-        }
-        else if (this.props.renderer == 'options_page') {
-            return (
-				<Options />
-            );
-        }
-        else if (this.props.renderer == 'itinerary_page') {
-			return (
-				<Itinerary />
-			)
-		}
+        <DeveloperPage />
 	}
 }
 

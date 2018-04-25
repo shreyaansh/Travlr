@@ -35,7 +35,7 @@ class Location extends React.Component {
         var events = locations[this.props.location_name].events.events.event;
 
         return (
-            <div className="row">
+            <div className="row animated fadeInUp">
                 <div className="col s12 m12">
                     <div className="card white" id="location_card">
                         <div className="card-content black-text">
