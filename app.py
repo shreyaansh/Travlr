@@ -393,8 +393,8 @@ def getTravelData():
                     datadict[start_dest] =  json.loads(str(row.data))
                 data[start_dest]['hotels'] = datadict[start_dest]
 
-            start_dest = stops[i]
             temp_hotels[start_dest] = data[start_dest]['hotels']
+            start_dest = stops[i]
     else:
         distance_matrix = google_maps.distance_matrix(origin, destination)
         data[start_dest] = {}
