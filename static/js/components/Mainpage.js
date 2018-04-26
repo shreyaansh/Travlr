@@ -4,22 +4,48 @@ import { connect } from 'react-redux';
 import axios from "axios";
 import constants from "../../../constants/constants"
 import fetchItems from "../actions/action_fetch_items"
+import preloader from "../actions/action_preloader_itin"
 
 class Mainpage extends React.Component {
 
     constructor (props) {
         super(props);
         this.getFormData = this.getFormData.bind(this);
+        this.validateDates = this.validateDates.bind(this);
+        this.displayPreloader = this.displayPreloader.bind(this);
+    }
 
+    validateDates(total_days, from_date, to_date) {
+        var one_day = 1000*60*60*24;
+        var f_date = new Date(from_date);
+        var t_date = new Date(to_date);
+
+        if(t_date < f_date) {
+            window.alert("INVALID DATE RANGE: The to date cannot be greater than from date");
+            return false;
+        }
+
+        var days = ((t_date - f_date) / one_day) + 1;
+        if(days !== total_days) {
+            window.alert("INVALID DATE RANGE: The total number of days do not match the date range");
+            return false;
+        }
+
+        return true;
     }
 
     getFormData() {
+
+        //Preloader
+        this.props.preloader();
+
         var form_data = {};
         var stops = [];
         var hotel_prefs = [];
         var event_prefs = [];
         var stop_days = [];
         var stop_data = [];
+        var total_days = 0;
 
         var form_div = Array.from($("#form_div input"));
         form_div.forEach(function(input) {
@@ -42,6 +68,7 @@ class Mainpage extends React.Component {
         var counter = 0;
         form_div.forEach(function(input){
             if(input.id === "stop_days"){
+                total_days += parseInt(input.value);
                 stop_days[counter][stop_data[counter]] = input.value;
                 counter++;
             }
@@ -49,6 +76,7 @@ class Mainpage extends React.Component {
 
         form_data['stops'] = stops;
         form_data['stop_days'] = stop_days;
+        form_data['total_days'] = total_days;
 
         var prefHotel = Array.from(document.getElementsByClassName('hotel_pref'));
         var prefEvent = Array.from(document.getElementsByClassName('event_pref'));
@@ -73,11 +101,17 @@ class Mainpage extends React.Component {
         if(userInfo) {
             console.log(constants.routeUrl);
             console.log(constants.routeUrl + 'travel-form');
-            axios.post(constants.routeUrl + "travel-form", form_data).then(res => {
-                // console.log(res);
-                console.log("FORM_DATA: Submitted", form_data);
-                this.props.fetchItems(res);
-            });
+
+            // Date Check
+            if(this.validateDates(form_data['total_days'], form_data['from_date'], form_data['to_date'])){
+                axios.post(constants.routeUrl + "travel-form", form_data).then(res => {
+                    // console.log(res);
+                    console.log("FORM_DATA: Submitted", form_data);
+                    this.props.fetchItems(res);
+                });
+            } else {
+                console.log('INVALID DATE RANGE: Something went wrong!');
+            }
         }
         else {
             console.log('FORM_DATA: No user signed in!');
@@ -86,12 +120,31 @@ class Mainpage extends React.Component {
 
     }
 
+    displayPreloader() {
+        console.log("Preloader: ", this.props.preloaderState);
+        if(this.props.preloaderState == "loading") {
+                // <a class="btn-floating pulse orange accent-2">
+                //     <i class="material-icons">fiber_manual_record</i>
+                // </a>
+            return(
+                <div className="progress black accent-3">
+                    <div className="indeterminate orange"></div>
+                </div>
+            );
+        }
+        else {
+            return(
+                <div></div>
+            );
+        }
+    }
+
     render() {
         return (
             <div>
-                <div className="row" id="main_form">
+                <div className="row animated fadeIn" id="main_form">
                     <div className="col s12 m6">
-                        <div className="card blue-grey darken-4">
+                        <div className="card blue-grey darken-4 animated fadeInLeft">
                             <div className="card-content white-text">
 
                                 <span id="form_user_name">Hi, {this.props.nameProp}</span>
@@ -100,7 +153,7 @@ class Mainpage extends React.Component {
                                 <div id="form_div">
                                     <div className="row">
                                         <div className="input-field col s8">
-                                            <input id="from_location" type="text"/>
+                                            <input className='autocomplete' id="from_location" type="text"/>
                                             <label htmlFor="from_location">First Stop</label>
                                         </div>
                                         <div className="input-field col s4">
@@ -116,7 +169,7 @@ class Mainpage extends React.Component {
 
                                     <div className="row">
                                         <div className="input-field col s8">
-                                            <input id="to_location" type="text"/>
+                                            <input className='autocomplete' id="to_location" type="text"/>
                                             <label htmlFor="to_location">Last Stop</label>
                                         </div>
                                         <div className="input-field col s4">
@@ -205,10 +258,14 @@ class Mainpage extends React.Component {
                                 </div>
                             </div>
                             <div className="card-action orange accent-4">
-                                <a onClick={this.getFormData} className="white-text" id="generateButtonDiv">Generate Itinerary</a>
+                                <a onClick={this.getFormData} className="white-text" id="generateButtonDiv">Generate Itinerary</a>&nbsp;
+                                
                             </div>
+                            {this.displayPreloader()}
                         </div>
+                        
                     </div>
+                    
                 </div>
 
                 <div className="row">
@@ -245,7 +302,7 @@ function add_stop_field() {
 
     var new_stop = document.createElement('div');
     new_stop.className = 'input-field col s8';
-    new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
+    new_stop.innerHTML = "<input class=\"autocomplete\" id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
             "p</label>";
 
     var stop_days = document.createElement('div');
@@ -266,12 +323,13 @@ function add_stop_field() {
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        items: centralReducer.items
+        items: centralReducer.items,
+        preloaderState: centralReducer.preloader
     });
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({fetchItems}, dispatch);
+    return bindActionCreators({fetchItems, preloader}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Mainpage);

@@ -32,6 +32,7 @@ class Location extends React.Component {
         var hotels = [];
         var identifier = uuidv1();
         Object.keys(locations[this.props.location_name].hotels).forEach((hotel) => hotels.push(hotel));
+
         var events = locations[this.props.location_name].events.events.event;
         var weather_summary = locations[this.props.location_name].weather_0.summary;
         var weather_temperature = locations[this.props.location_name].weather_0.temperature;
@@ -39,7 +40,7 @@ class Location extends React.Component {
         var weather_severe = locations[this.props.location_name].weather_0.severe;
 
         return (
-            <div className="row">
+            <div className="row animated fadeInUp">
                 <div className="col s12 m12">
                     <div className="card white" id="location_card">
                         <div className="card-content black-text">

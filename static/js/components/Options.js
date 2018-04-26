@@ -16,12 +16,22 @@ class Options extends React.Component {
     }
 
     locationList() {
-        var locations = []
+        var locations = [];
         var payload = this.props.items;
         for(var key in payload.data) {
-            locations.push(key);
+            locations.push([key, payload.data[key].stop_no]);
         }
-        return locations;
+
+        locations.sort(function (a, b) {
+            return a[1] - b[1];
+        });
+
+        var location_list = [];
+        for(var i = 0; i < locations.length; i++) {
+            location_list.push(locations[i][0]);
+        }
+
+        return location_list;
     }
 
     onGenerateClick() {

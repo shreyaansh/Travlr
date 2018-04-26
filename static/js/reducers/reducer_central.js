@@ -1,31 +1,78 @@
 const initialState = {
+    preloader: "done",
     renderer: "main_page",
     items: {},
     currentSelection: {
         itinerary: {},
         email: ""
-    }
+    },
+    savedItinerary : {},
+    currentSavedSelection: {}
 }
 
 function centralReducer(state = initialState, action) {
     switch (action.type) {
 
-        case "PAGE_RENDER_CHANGE_MAIN":
+        case "PRELOADER_STATE":
+
             return ({
-                renderer: "main_page",
+                preloader: "loading",
+                renderer: state.renderer,
                 items: state.items,
                 currentSelection: state.currentSelection
+            });
+
+        case "PAGE_RENDER_CHANGE_MAIN":
+            return ({
+                preloader: "done",
+                renderer: "main_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
+
+            });
+        case "PAGE_RENDER_CHANGE_DEV":
+            return ({
+                renderer: "dev_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
+
+            });
+        case "VIEW_SAVED_ITINERARY":
+            console.log(action.payload);
+            return ({
+                renderer: "saved_itin_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : action.payload,
+                currentSavedSelection: state.currentSavedSelection
+
+            });
+        case "VIEW_SELECTED_SAVED_ITINERARY":
+            return ({
+                renderer: "custom_itin_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: action.payload
 
             });
         case "POST_USER_INFO":
             console.log("ACTION: USER INFO POSTED");
+            state.preloader = "done";
             return state;
 
         case "SET_ITEMS_IN_STORE":
             return ({
+                preloader: "done",
                 renderer: "options_page",
                 items: action.payload,
-                currentSelection: state.currentSelection
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
             });
 
         case "GENERATE_ITINERARY_FROM_DATA":
@@ -34,9 +81,12 @@ function centralReducer(state = initialState, action) {
             new_itin['email'] = userInfo.profileObj.email;
             console.log(new_itin);
             return ({
+                preloader: "done",
                renderer: "itinerary_page",
                items: state.items,
-               currentSelection: state.currentSelection
+               currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
             });
 
         case "HOTEL_SELECTED":
@@ -48,6 +98,7 @@ function centralReducer(state = initialState, action) {
             }
             state.currentSelection.itinerary[action.city].selectedHotel = action.payload;
             console.log(state.currentSelection.itinerary);
+            state.preloader = "done";
             return state;
         
         case "EVENT_SELECTED":
@@ -59,6 +110,7 @@ function centralReducer(state = initialState, action) {
             }
             state.currentSelection.itinerary[action.city].selectedEvents[action.identifier] = action.payload;
             console.log(state.currentSelection.itinerary);
+            state.preloader = "done";
             return state;
 
         case "EVENT_UNSELECTED":
@@ -70,6 +122,7 @@ function centralReducer(state = initialState, action) {
             }
             delete state.currentSelection.itinerary[action.city].selectedEvents[action.identifier];
             console.log(state.currentSelection.itinerary);
+            state.preloader = "done";
             return state;                
 
         default:
