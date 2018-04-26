@@ -175,6 +175,9 @@ def getEvents(city, event_prefs, year, month, day):
     url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&location=" + city + "&category=" + category + "&date=" + year + month + day + "00-" + year + month + day + "00"
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
+    if type(data['events']) == type(None):
+        data['events'] = {'event': []}
+
     return data
 
 @app.route('/authenticate', methods=['POST'])
