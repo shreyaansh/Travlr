@@ -42,7 +42,7 @@ class Navbar extends React.Component {
 
     renderPdfDownloadButton() {
         // debugger;
-        if(this.props.renderer == "itinerary_page") {
+        if(this.props.renderer == "itinerary_page" || this.props.renderer == "custom_itin_page") {
             return(
                 <a href="#" onClick={this.createPDF}><i class="material-icons left">file_download</i>Itinerary as PDF</a>
             );
