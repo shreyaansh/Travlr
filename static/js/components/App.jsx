@@ -15,6 +15,7 @@ import constants from '../../../constants/constants';
 import Feedback from "./Feedback";
 import Developer from "./Developer";
 import DeveloperPage from './DeveloperPage';
+import MyItin from './MyItin';
 
 const clientId = "";
 
@@ -104,7 +105,7 @@ class App extends React.Component {
         }
         else if (this.props.renderer == 'itinerary_page') {
 			return (
-				<Itinerary />
+				<Itinerary is_saved={false} />
 			)
 		}
 		else if (this.props.renderer == 'dev_page') {
@@ -112,6 +113,16 @@ class App extends React.Component {
 				<DeveloperPage />
 			)
 		}
+		else if (this.props.renderer == 'saved_itin_page') {
+			return (
+				<MyItin />
+			)
+		}
+        else if (this.props.renderer == 'custom_itin_page') {
+            return (
+				<Itinerary is_saved={true} />
+            )
+        }
 	}
 }
 

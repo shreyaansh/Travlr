@@ -287,7 +287,7 @@ def getItineraries():
         if row.email not in ItinDict:
             ItinDict[row.email]={}
         print(row.itinerary)
-        ItinDict[row.email][row.id] =  json.dumps(str(row.itinerary))
+        ItinDict[row.email][row.id] =  json.dumps(row.itinerary)
     return jsonify(ItinDict)
 
 @app.route('/delete-feedback', methods=['POST'])

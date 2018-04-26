@@ -11,12 +11,35 @@ class ItineraryLocation extends React.Component {
 
     constructor (props) {
         super(props);
+        this.selectEvent = this.selectEvent.bind(this);
+    }
+
+    selectEvent (event) {
+        var event_data = null;
+        if(this.props.is_saved){
+            event_data = this.props.currentSavedSelection[this.props.location_name.toLowerCase()].selectedEvents[event];
+        } else {
+            event_data = this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents[event];
+        }
+        return (<ItineraryEvent key={event['id']} event_data={event_data}/>);
     }
 
     render() {
-        var hotel = this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedHotel;
+        var hotel = null;
         var events = [];
-        Object.keys(this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents).forEach((event) => events.push(event));
+
+        if(this.props.is_saved) {
+            hotel = this.props.currentSavedSelection[this.props.location_name.toLowerCase()].selectedHotel;
+            Object.keys(this.props.currentSavedSelection[this.props.location_name.toLowerCase()].selectedEvents).forEach((event) => events.push(event));
+        } else {
+            hotel = this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedHotel;
+            Object.keys(this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents).forEach((event) => events.push(event));
+        }
+
+        //BACKUP WORKING
+        // var hotel = this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedHotel;
+        // var events = [];
+        // Object.keys(this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents).forEach((event) => events.push(event));
 
         return (
             <div className="row">
@@ -32,7 +55,7 @@ class ItineraryLocation extends React.Component {
                             <h5>Events you are Interested In</h5>
                             <br />
                             <div id="itinerary_event_cards_div">
-                                {events.map((event) => <ItineraryEvent key={event['id']} event_data={this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents[event]}/>)}
+                                {events.map(this.selectEvent)}
                             </div>
                         </div>
                     </div>
@@ -44,7 +67,8 @@ class ItineraryLocation extends React.Component {
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        currentSelection: centralReducer.currentSelection
+        currentSelection: centralReducer.currentSelection,
+        currentSavedSelection: centralReducer.currentSavedSelection
     });
 }
 

@@ -4,7 +4,9 @@ const initialState = {
     currentSelection: {
         itinerary: {},
         email: ""
-    }
+    },
+    savedItinerary : {},
+    currentSavedSelection: {}
 }
 
 function centralReducer(state = initialState, action) {
@@ -14,14 +16,37 @@ function centralReducer(state = initialState, action) {
             return ({
                 renderer: "main_page",
                 items: state.items,
-                currentSelection: state.currentSelection
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
 
             });
         case "PAGE_RENDER_CHANGE_DEV":
             return ({
                 renderer: "dev_page",
                 items: state.items,
-                currentSelection: state.currentSelection
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
+
+            });
+        case "VIEW_SAVED_ITINERARY":
+            console.log(action.payload);
+            return ({
+                renderer: "saved_itin_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : action.payload,
+                currentSavedSelection: state.currentSavedSelection
+
+            });
+        case "VIEW_SELECTED_SAVED_ITINERARY":
+            return ({
+                renderer: "custom_itin_page",
+                items: state.items,
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: action.payload
 
             });
         case "POST_USER_INFO":
@@ -32,7 +57,9 @@ function centralReducer(state = initialState, action) {
             return ({
                 renderer: "options_page",
                 items: action.payload,
-                currentSelection: state.currentSelection
+                currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
             });
 
         case "GENERATE_ITINERARY_FROM_DATA":
@@ -43,7 +70,9 @@ function centralReducer(state = initialState, action) {
             return ({
                renderer: "itinerary_page",
                items: state.items,
-               currentSelection: state.currentSelection
+               currentSelection: state.currentSelection,
+                savedItinerary : state.savedItinerary,
+                currentSavedSelection: state.currentSavedSelection
             });
 
         case "HOTEL_SELECTED":
