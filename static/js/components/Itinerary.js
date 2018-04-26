@@ -7,10 +7,13 @@ import fetchItems from "../actions/action_fetch_items"
 import ItineraryLocation from "./ItineraryLocation"
 
 class Itinerary extends React.Component {
-
+    
     constructor (props) {
         super(props);
         this.locationList = this.locationList.bind(this);
+        console.log("New page");
+        this.onClickfunct = this.onClickfunct.bind(this);        
+        
     }
 
     locationList() {
@@ -22,13 +25,18 @@ class Itinerary extends React.Component {
         return locations;
     }
 
-    render() {
-        var locations = this.locationList();
-        var pl = this.props.currentSelection.itinerary;
+    onClickfunct(){
         var doc = new jsPDF();
+        var pl = this.props.currentSelection.itinerary;
         doc.text("Your Itinerary:",10,10);
         var y = 20;
+        var np = false;
         jQuery.each(pl, function(loc, locs){
+            if(np){
+                doc.addPage();
+                y=10;
+            }
+            np = true;
             doc.text(loc,10,y);
             y+=10;
             doc.text("Hotel Information:",20,y);
@@ -55,10 +63,16 @@ class Itinerary extends React.Component {
             });
         });
         doc.save("itin.pdf");
+    }
+
+    render() {
+        var locations = this.locationList();
         return (
             <div id="itinerary">
                 <h2 id="opt_tile">Here's your Itinerary.</h2>
+                <a className="btn red" onClick={this.onClickfunct}>Download as PDF</a>
                 {locations.map((location) => <ItineraryLocation key={location} location_name={location}/>)}
+                
             </div>
         );
     }
