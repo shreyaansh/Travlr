@@ -128,7 +128,7 @@ class Mainpage extends React.Component {
                                 <div id="form_div">
                                     <div className="row">
                                         <div className="input-field col s8">
-                                            <input id="from_location" type="text"/>
+                                            <input className='autocomplete' id="from_location" type="text"/>
                                             <label htmlFor="from_location">First Stop</label>
                                         </div>
                                         <div className="input-field col s4">
@@ -144,7 +144,7 @@ class Mainpage extends React.Component {
 
                                     <div className="row">
                                         <div className="input-field col s8">
-                                            <input id="to_location" type="text"/>
+                                            <input className='autocomplete' id="to_location" type="text"/>
                                             <label htmlFor="to_location">Last Stop</label>
                                         </div>
                                         <div className="input-field col s4">
@@ -273,7 +273,7 @@ function add_stop_field() {
 
     var new_stop = document.createElement('div');
     new_stop.className = 'input-field col s8';
-    new_stop.innerHTML = "<input id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
+    new_stop.innerHTML = "<input class=\"autocomplete\" id=\"stop_location\" type=\"text\">\n<label for=\"stop_location\">New Sto" +
             "p</label>";
 
     var stop_days = document.createElement('div');
