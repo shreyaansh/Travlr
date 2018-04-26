@@ -4,7 +4,7 @@ import constants from "../../../constants/constants"
 const printItinerary = (data) => {
     axios.post(constants.routeUrl + "save-itin", {data}).then(res => {
         console.log("Saved Itinerary in DB");
-        console.log(res);
+        // console.log("hh: ", res);
     });
 
     return {

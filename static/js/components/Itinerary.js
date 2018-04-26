@@ -24,7 +24,7 @@ class Itinerary extends React.Component {
 
     render() {
         var locations = this.locationList();
-
+        console.log("locations: ", locations);
         return (
             <div id="itinerary">
                 <h2 id="opt_tile">Here's your Itinerary.</h2>

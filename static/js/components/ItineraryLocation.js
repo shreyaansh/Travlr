@@ -6,6 +6,8 @@ import constants from "../../../constants/constants"
 import fetchItems from "../actions/action_fetch_items"
 import ItineraryHotel from "./ItineraryHotel"
 import ItineraryEvent from "./ItineraryEvent"
+//Timestamp based unique ids
+const uuidv1 = require('uuid/v1');
 
 class ItineraryLocation extends React.Component {
 
@@ -32,7 +34,7 @@ class ItineraryLocation extends React.Component {
                             <h5>Events you are Interested In</h5>
                             <br />
                             <div id="itinerary_event_cards_div">
-                                {events.map((event) => <ItineraryEvent key={event['id']} event_data={this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents[event]}/>)}
+                                {events.map((event) => <ItineraryEvent key={uuidv1()} event_data={this.props.currentSelection.itinerary[this.props.location_name.toLowerCase()].selectedEvents[event]}/>)}
                             </div>
                         </div>
                     </div>

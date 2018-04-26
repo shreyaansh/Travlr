@@ -32,6 +32,7 @@ class Location extends React.Component {
         var hotels = [];
         var identifier = uuidv1();
         Object.keys(locations[this.props.location_name].hotels).forEach((hotel) => hotels.push(hotel));
+
         var events = locations[this.props.location_name].events.events.event;
 
         return (
