@@ -9,7 +9,8 @@ class Navbar extends React.Component {
     constructor (props) {
         super(props);
         console.log(this.props.navProps.nameHandler);
-        this.renderPdfDownloadButton = this.renderPdfDownloadButton.bind(this);                
+        this.renderPdfDownloadButton = this.renderPdfDownloadButton.bind(this);
+        this.createPDF = this.createPDF.bind(this);
     }
 
     componentDidMount() {
@@ -20,11 +21,28 @@ class Navbar extends React.Component {
         });
     }
 
+    createPDF() {
+
+        // Load DOC
+        var itin = $("#itinerary");
+        var html = "<!DOCTYPE HTML>";
+        html += '<html lang="en-us">';
+        html += '<head><style></style></head>';
+        html += "<body>";
+        html += itin.html();
+        html += "</body></html>";
+        console.log(html);
+
+        var doc = new jsPDF();
+        doc.fromHTML(html);
+        doc.save("test.pdf");
+    }
+
     renderPdfDownloadButton() {
         // debugger;
         if(this.props.renderer == "itinerary_page") {
             return(
-                <a href="#"><i class="material-icons left">file_download</i>Itinerary as PDF</a>
+                <a href="#" onClick={this.createPDF}><i class="material-icons left">file_download</i>Itinerary as PDF</a>
             );
         }
         else {
