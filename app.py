@@ -383,6 +383,13 @@ def getTravelData():
                 data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
                 data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
                 data[start_dest]['hotels'] = {}
+                days = -1
+                for city in token['stop_days']:
+                    thecity = str(city.keys())
+                    thecity = thecity[12:thecity.find(']') - 1]
+                    if thecity == start_dest:
+                        days = int(city[start_dest])
+                print("EndLoop1-" + start_dest + "-" + str(days))
                 data[start_dest]['weather'] = {}
                 data[start_dest]['weather']['summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
                 data[start_dest]['weather']['temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
@@ -421,6 +428,13 @@ def getTravelData():
             data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
             data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
             data[start_dest]['hotels'] = {}
+            days = -1
+            for city in token['stop_days']:
+                thecity = str(city.keys())
+                thecity = thecity[12:thecity.find(']') - 1]
+                if thecity == start_dest:
+                    days = int(city[start_dest])
+            print("EndLoop2-" + start_dest + "-" + str(days))
             data[start_dest]['weather'] = {}
             data[start_dest]['weather']['summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
             data[start_dest]['weather']['temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
@@ -455,6 +469,13 @@ def getTravelData():
         data[start_dest]['distance_to_next'] = distance_matrix['rows'][0]['elements'][0]['distance']['text']
         data[start_dest]['events'] = getEvents(start_dest.replace(" ", ""), event_prefs, str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)))
         data[start_dest]['hotels'] = {}
+        days = -1
+        for city in token['stop_days']:
+            thecity = str(city.keys())
+            thecity = thecity[12:thecity.find(']') - 1]
+            if thecity == start_dest:
+                days = int(city[start_dest])
+        print("EndLoop3-" + start_dest + "-" + str(days))
         data[start_dest]['weather'] = {}
         data[start_dest]['weather']['summary'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "summary")
         data[start_dest]['weather']['temperature'] = getWeather(start_dest.replace(" ", "-"), str(from_date.year), str('{:02d}'.format(from_date.month)), str('{:02d}'.format(from_date.day)), "temperature")
@@ -487,6 +508,13 @@ def getTravelData():
     data[end_dest]['distance_to_next'] = "N/a"
     data[end_dest]['events'] = getEvents(end_dest.replace(" ", ""), event_prefs, str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)))
     data[end_dest]['hotels'] = {}
+    days = -1
+    for city in token['stop_days']:
+        thecity = str(city.keys())
+        thecity = thecity[12:thecity.find(']') - 1]
+        if thecity == end_dest:
+            days = int(city[end_dest])
+    print("EndLoop4-" + end_dest + "-" + str(days))
     data[end_dest]['weather'] = {}
     data[end_dest]['weather']['summary'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "summary")
     data[end_dest]['weather']['temperature'] = getWeather(end_dest.replace(" ", "-"), str(to_date.year), str('{:02d}'.format(to_date.month)), str('{:02d}'.format(to_date.day)), "temperature")
