@@ -9,6 +9,7 @@ class Navbar extends React.Component {
     constructor (props) {
         super(props);
         console.log(this.props.navProps.nameHandler);
+        this.renderPdfDownloadButton = this.renderPdfDownloadButton.bind(this);                
     }
 
     componentDidMount() {
@@ -17,6 +18,20 @@ class Navbar extends React.Component {
            elem.style.width = 'auto';
            elem.style.margin = '10px';
         });
+    }
+
+    renderPdfDownloadButton() {
+        // debugger;
+        if(this.props.renderer == "itinerary_page") {
+            return(
+                <a href="#"><i class="material-icons left">file_download</i>Itinerary as PDF</a>
+            );
+        }
+        else {
+            return(
+                <div></div>
+            );
+        }
     }
 
     render() {
@@ -30,6 +45,7 @@ class Navbar extends React.Component {
                                 className="material-icons">menu</i></a>
                             <ul className="right hide-on-med-and-down">
                                 <li><a href="#"><i className="material-icons left">settings</i></a></li>
+                                <li>{this.renderPdfDownloadButton()}</li>
                                 <li>
                                     {!this.props.navProps.nameHandler
 
@@ -47,6 +63,7 @@ class Navbar extends React.Component {
                                         />
                                     }
                                 </li>
+                                
                             </ul>
                         </div>
                     </nav>
@@ -54,6 +71,7 @@ class Navbar extends React.Component {
                 <div>
                     <ul className="sidenav" id="mobile-demo">
                         <li><a href="#"><i className="material-icons left">settings</i>Settings</a></li>
+                        <li>{this.renderPdfDownloadButton()}</li>
                         <li>
                             {!this.props.navProps.nameHandler
 
@@ -71,6 +89,7 @@ class Navbar extends React.Component {
                                 />
                             }
                         </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -78,10 +97,10 @@ class Navbar extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        
-    }
+const mapStateToProps = ({ centralReducer }) => {
+    return ({
+        renderer: centralReducer.renderer
+    });
 }
 
 
