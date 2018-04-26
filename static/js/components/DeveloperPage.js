@@ -1,96 +1,82 @@
-import React from "react";
-import { connect } from 'react-redux';
+import React from 'react';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import axios from "axios";
+import constants from "../../../constants/constants";
 
-import Mainpage from './Mainpage';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import Options from './Options';
+class DeveloperPage extends React.Component {
 
-import goToLogin from '../actions/action_select_login';
-import goToMain from '../actions/action_select_main';
-import postUserInfo from '../actions/action_post_user_info';
-import constants from '../../../constants/constants';
-import Feedback from "./Feedback";
+    constructor (props) {
+        super(props);
+        this.getFeedback = this.getFeedback.bind(this);
+    }
 
-const clientId = "";
+    componentDidMount() {
+        this.getFeedback();
+    }
 
-class App extends React.Component {
+    getFeedback() {
+        axios.get(constants.routeUrl + 'get-feedback').then(res => {
+            console.log("DATA RECEIVED:" + res);
+            createFeedback(res.data);
+        });
+    }
 
-	constructor (props) {
-		super(props);
+    render() {
 
-		this.state = {
-			currentUser: JSON.parse(localStorage.getItem('currentUser')) || null
-		};
-		
-		this.googleLogin = this.googleLogin.bind(this);
-		this.googleLogout = this.googleLogout.bind(this);
-		this.nameHandler = this.nameHandler.bind(this);
-		this.navProps = this.navProps.bind(this);		
-		
-
-	}
-
-	googleLogin(response) {
-		if(response) {
-			localStorage.setItem('currentUser', JSON.stringify(response));
-			this.setState({currentUser: JSON.parse(localStorage.getItem('currentUser'))});
-			this.props.postUserInfo(response.getAuthResponse().id_token);
-		}
-		else {
-			console.log("Error: googleLogin@App.jsx");
-		}
-	}
-
-	googleLogout(){
-		localStorage.clear();
-		this.setState({currentUser: ""});
-	}
-
-
-	nameHandler() {
-		if( this.state.currentUser && this.state.currentUser.w3) {
-			return this.state.currentUser.w3.ig;
-		}
-		else return null;
-	}
-
-	navProps() {
-		return ({
-			userInfo: this.state.currentUser,
-			login: this.googleLogin,
-			logout: this.googleLogout,
-			nameHandler: this.nameHandler()
-		});
-	}
-
-	render() {
-		return (
-			<div>
-				<Navbar navProps={this.navProps()}/>
-				{/*<Mainpage nameProp={this.nameHandler()} />*/}
-				{this.renderSelector()}
-				<Footer />
-				<Feedback />
-			</div>
-		);
-	}
-
-	renderSelector() {
-        <DeveloperPage />
-	}
+        return (
+            <div className="row" id="feedback_div">
+            </div>
+        );
+    }
 }
 
+// Delete Feedback
+document.addEventListener('delete-feedback', function (e) {
+   console.log("DELETE FEEDBACK EVENT CAPTURED");
+   console.log(e.data);
+   axios.post(constants.routeUrl + 'delete-feedback', {'feedback-id' : e.data}).then(res => {
+      console.log(res);
+   });
+});
+
+function createFeedback(feedback) {
+    console.log(feedback);
+    var feedback_div = document.getElementById('feedback_div');
+
+    for(var key in feedback){
+        console.log(key);
+        var userTableDiv = document.createElement("div");
+        userTableDiv.id = "userTableDiv";
+
+        var userTable = document.createElement("TABLE");
+        userTable.className = "striped";
+        userTable.id = "feedback_table";
+        var userCaption = userTable.createCaption();
+        userCaption.innerHTML = "<b>" + key + "</b>";
+
+        for(var feed in feedback[key]){
+            var userDataRow = userTable.insertRow(-1);
+            userDataRow.id = feed;  // Set unique id as row id for deleting feedback
+            var userDataIdCell = userDataRow.insertCell(0);
+            userDataIdCell.innerHTML = "<b>" + feed + "</b>";
+            var userDataCell = userDataRow.insertCell(1);
+            userDataCell.innerHTML = feedback[key][feed];
+            var userDeleteCell = userDataRow.insertCell(2);
+            userDeleteCell.innerHTML = "<a class=\"btn red\" id=\"delete_feedback\" onclick=\"OnDeleteFeedback(this)\">Delete</a>";
+        }
+
+        userTableDiv.appendChild(userTable);
+        feedback_div.appendChild(userTableDiv);
+    }
+}
 
 const mapStateToProps = ({ centralReducer }) => {
-	return ({
-		renderer: centralReducer.renderer
-	});
+    return ({});
 }
 
 const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({goToLogin, goToMain, postUserInfo}, dispatch);
+    return bindActionCreators({}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(DeveloperPage);
