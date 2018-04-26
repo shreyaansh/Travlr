@@ -11,6 +11,8 @@ class Navbar extends React.Component {
     constructor (props) {
         super(props);
         console.log(this.props.navProps.nameHandler);
+        this.renderPdfDownloadButton = this.renderPdfDownloadButton.bind(this);
+        this.createPDF = this.createPDF.bind(this);
     }
 
     componentDidMount() {
@@ -19,6 +21,37 @@ class Navbar extends React.Component {
            elem.style.width = 'auto';
            elem.style.margin = '10px';
         });
+    }
+
+    createPDF() {
+
+        // Load DOC
+        var itin = $("#itinerary");
+        var html = "<!DOCTYPE HTML>";
+        html += '<html lang="en-us">';
+        html += '<head><style></style></head>';
+        html += "<body>";
+        html += itin.html();
+        html += "</body></html>";
+        console.log(html);
+
+        var doc = new jsPDF('l', 'mm', [297, 210]);
+        doc.fromHTML(html);
+        doc.save("YourItinerary.pdf");
+    }
+
+    renderPdfDownloadButton() {
+        // debugger;
+        if(this.props.renderer == "itinerary_page") {
+            return(
+                <a href="#" onClick={this.createPDF}><i class="material-icons left">file_download</i>Itinerary as PDF</a>
+            );
+        }
+        else {
+            return(
+                <div></div>
+            );
+        }
     }
 
     render() {
@@ -33,6 +66,7 @@ class Navbar extends React.Component {
                             <ul className="right hide-on-med-and-down">
                                 <li><a href="#"><i className="material-icons left">settings</i></a></li>
                                 <li><a href="#" onClick={this.props.viewItin}>My Itineraries</a></li>
+                                <li>{this.renderPdfDownloadButton()}</li>
                                 <li>
                                     {!this.props.navProps.nameHandler
 
@@ -50,6 +84,7 @@ class Navbar extends React.Component {
                                         />
                                     }
                                 </li>
+                                
                             </ul>
                         </div>
                     </nav>
@@ -57,6 +92,7 @@ class Navbar extends React.Component {
                 <div>
                     <ul className="sidenav" id="mobile-demo">
                         <li><a href="#"><i className="material-icons left">settings</i>Settings</a></li>
+                        <li>{this.renderPdfDownloadButton()}</li>
                         <li>
                             {!this.props.navProps.nameHandler
 
@@ -74,6 +110,7 @@ class Navbar extends React.Component {
                                 />
                             }
                         </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -81,10 +118,10 @@ class Navbar extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        
-    }
+const mapStateToProps = ({ centralReducer }) => {
+    return ({
+        renderer: centralReducer.renderer
+    });
 }
 
 
