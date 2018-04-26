@@ -13,6 +13,8 @@ import goToMain from '../actions/action_select_main';
 import postUserInfo from '../actions/action_post_user_info';
 import constants from '../../../constants/constants';
 import Feedback from "./Feedback";
+import Developer from "./Developer";
+import DeveloperPage from './DeveloperPage';
 
 const clientId = "";
 
@@ -22,13 +24,15 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			currentUser: JSON.parse(localStorage.getItem('currentUser')) || null
+			currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
+			isDeveloper: localStorage.getItem('isDeveloper') || null
 		};
 		
 		this.googleLogin = this.googleLogin.bind(this);
 		this.googleLogout = this.googleLogout.bind(this);
 		this.nameHandler = this.nameHandler.bind(this);
-		this.navProps = this.navProps.bind(this);		
+		this.navProps = this.navProps.bind(this);
+		this.isDeveloper = this.isDeveloper.bind(this);
 		
 
 	}
@@ -46,7 +50,7 @@ class App extends React.Component {
 
 	googleLogout(){
 		localStorage.clear();
-		this.setState({currentUser: ""});
+		this.setState({currentUser: "", isDeveloper: ""});
 	}
 
 
@@ -66,13 +70,22 @@ class App extends React.Component {
 		});
 	}
 
+	isDeveloper() {
+		if (this.state.isDeveloper == "True")
+			return <Developer/>;
+		else
+			return (<div></div>);
+	}
+
 	render() {
 		return (
 			<div>
 				<Navbar navProps={this.navProps()}/>
 				{/*<Mainpage nameProp={this.nameHandler()} />*/}
+				{this.isDeveloper()}
 				{this.renderSelector()}
 				<Footer />
+				<Feedback />
 				<Feedback />
 			</div>
 		);
@@ -92,6 +105,11 @@ class App extends React.Component {
         else if (this.props.renderer == 'itinerary_page') {
 			return (
 				<Itinerary />
+			)
+		}
+		else if (this.props.renderer == 'dev_page') {
+			return (
+				<DeveloperPage />
 			)
 		}
 	}

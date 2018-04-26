@@ -307,13 +307,13 @@ def getItineraries():
 def deleteFeedback():
     token = request.get_json()
     print(token)
-    feedid = token['feedback-id']
+    feedid = int(token['feedback-id'])
     sqlq = 'Delete from "public"."Feedback" where id = %d' %(feedid)
     print(sqlq)
     result = db.engine.execute(sqlq)
-    return jsonify({"Test": "Success"})
+    return jsonify({"Success": "Feedback Deleted"})
 
-@app.route('/get-feedback', methods=['POST'])
+@app.route('/get-feedback', methods=['GET'])
 def getFeedback():
     sqlq='Select * from "public"."Feedback"'
     print(sqlq)

@@ -25,6 +25,21 @@
 				var parent_div = document.getElementById('stop_fields');
 				parent_div.removeChild(field.parentNode.parentNode);
 			}
+
+            function OnDeleteFeedback(ele) {
+                console.log(ele);
+                var feedback_table = ele.parentNode.parentNode.parentNode.parentNode;
+                var row = ele.parentNode.parentNode;
+                var i = row.rowIndex;
+                var feedback_id = row.id;
+                console.log("Row Index:" + i + " ID:" + feedback_id);
+                feedback_table.deleteRow(i);
+
+                // Request to delete feedback from SQL
+				var event = new Event('delete-feedback');
+				event.data = feedback_id;
+				document.dispatchEvent(event);
+            }
 		</script>
 		
 		<title>Travlr ✈️ </title>
