@@ -280,7 +280,7 @@ def getItineraries():
 
     ItinDict={}
     for row in result:
-        if row.email not in FeedbackDict:
+        if row.email not in ItinDict:
             ItinDict[row.email]={}
         ItinDict[row.email][row.id] =  json.loads(str(row.itinerary))
     #return jsonify(ret_token)
