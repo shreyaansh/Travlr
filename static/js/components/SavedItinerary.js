@@ -6,7 +6,7 @@ import constants from "../../../constants/constants"
 import fetchItems from "../actions/action_fetch_items"
 import ItineraryLocation from "./ItineraryLocation"
 
-class Itinerary extends React.Component {
+class SavedItinerary extends React.Component {
 
     constructor (props) {
         super(props);
@@ -15,12 +15,7 @@ class Itinerary extends React.Component {
 
     locationList() {
         var locations = []
-        var payload = this.props.currentSelection.itinerary;
-
-        if(this.props.is_saved) {
-            payload = this.props.currentSavedSelection;
-        }
-
+        var payload = this.props.savedSelection.itinerary;
         for(var key in payload) {
             locations.push(key);
         }
@@ -29,11 +24,11 @@ class Itinerary extends React.Component {
 
     render() {
         var locations = this.locationList();
-        console.log("locations: ", locations);
+
         return (
             <div id="itinerary">
                 <h2 id="opt_tile">Here's your Itinerary.</h2>
-                {locations.map((location) => <ItineraryLocation key={location} is_saved={this.props.is_saved} location_name={location}/>)}
+                {locations.map((location) => <ItineraryLocation key={location} location_name={location}/>)}
             </div>
         );
     }
@@ -41,8 +36,7 @@ class Itinerary extends React.Component {
 
 const mapStateToProps = ({ centralReducer }) => {
     return ({
-        currentSelection: centralReducer.currentSelection,
-        currentSavedSelection: centralReducer.currentSavedSelection
+        currentSelection: centralReducer.currentSelection
     });
 }
 
@@ -50,4 +44,4 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Itinerary);
+export default connect(mapStateToProps, mapDispatchToProps)(SavedItinerary);

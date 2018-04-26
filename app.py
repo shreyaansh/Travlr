@@ -175,6 +175,9 @@ def getEvents(city, event_prefs, year, month, day):
     url="http://api.eventful.com/json/events/search?app_key=pRWGnf7cxRpF8nmn&location=" + city + "&category=" + category + "&date=" + year + month + day + "00-" + year + month + day + "00"
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
+    if type(data['events']) == type(None):
+        data['events'] = {'event': []}
+
     return data
 
 @app.route('/authenticate', methods=['POST'])
@@ -274,19 +277,18 @@ def saveItinerary():
 @app.route('/get-itin', methods=['POST'])
 def getItineraries():
     token = request.get_json()
+    #token=token.replace("\'","\"")
     email = token['email']
     sqlq = 'Select * from "public"."ItineraryStorage" where email =\'%s\''%(email)
     result = db.engine.execute(sqlq)
 
     ItinDict={}
     for row in result:
-        if row.email not in FeedbackDict:
+        if row.email not in ItinDict:
             ItinDict[row.email]={}
-        ItinDict[row.email][row.id] =  json.loads(str(row.itinerary))
-    #return jsonify(ret_token)
+        print(row.itinerary)
+        ItinDict[row.email][row.id] =  json.dumps(row.itinerary)
     return jsonify(ItinDict)
-    # Add db call here to fetch itin based on user email
-    #return jsonify({"Test": "Success"})
 
 @app.route('/delete-feedback', methods=['POST'])
 def deleteFeedback():

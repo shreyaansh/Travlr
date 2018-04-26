@@ -27,11 +27,13 @@
   "dependencies": {
     "animate.css": "^3.6.1",
     "axios": "^0.18.0",
+    "npm": "^6.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-google-login": "^3.0.4",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
+    "redux-promise": "^0.5.3",
     "uuid": "^3.2.1"
   }
 }

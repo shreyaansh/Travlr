@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
 
+import viewItin from '../actions/action_my_itineraries';
+
 class Navbar extends React.Component {
     
     constructor (props) {
@@ -30,6 +32,7 @@ class Navbar extends React.Component {
                                 className="material-icons">menu</i></a>
                             <ul className="right hide-on-med-and-down">
                                 <li><a href="#"><i className="material-icons left">settings</i></a></li>
+                                <li><a href="#" onClick={this.props.viewItin}>My Itineraries</a></li>
                                 <li>
                                     {!this.props.navProps.nameHandler
 
@@ -86,7 +89,7 @@ const mapStateToProps = (state) => {
 
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({viewItin}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
