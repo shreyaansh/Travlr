@@ -274,6 +274,7 @@ def saveItinerary():
 @app.route('/get-itin', methods=['POST'])
 def getItineraries():
     token = request.get_json()
+    #token=token.replace("\'","\"")
     email = token['email']
     sqlq = 'Select * from "public"."ItineraryStorage" where email =\'%s\''%(email)
     result = db.engine.execute(sqlq)
@@ -282,11 +283,9 @@ def getItineraries():
     for row in result:
         if row.email not in ItinDict:
             ItinDict[row.email]={}
-        ItinDict[row.email][row.id] =  json.loads(str(row.itinerary))
-    #return jsonify(ret_token)
+        print(row.itinerary)
+        ItinDict[row.email][row.id] =  json.dumps(str(row.itinerary))
     return jsonify(ItinDict)
-    # Add db call here to fetch itin based on user email
-    #return jsonify({"Test": "Success"})
 
 @app.route('/delete-feedback', methods=['POST'])
 def deleteFeedback():
