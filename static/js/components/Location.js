@@ -33,10 +33,10 @@ class Location extends React.Component {
         var identifier = uuidv1();
         Object.keys(locations[this.props.location_name].hotels).forEach((hotel) => hotels.push(hotel));
         var events = locations[this.props.location_name].events.events.event;
-        //var weather_summary = locations[this.props.location_name].weather.summary;
-        //var weather_temperature = locations[this.props.location_name].weather.temperature;
-        //var weather_clothing = locations[this.props.location_name].weather.clothing;
-        //var weather_severe = locations[this.props.location_name].weather.severe;
+        var weather_summary = locations[this.props.location_name].weather_0.summary;
+        var weather_temperature = locations[this.props.location_name].weather_0.temperature;
+        var weather_clothing = locations[this.props.location_name].weather_0.clothing;
+        var weather_severe = locations[this.props.location_name].weather_0.severe;
 
         return (
             <div className="row">
@@ -47,10 +47,10 @@ class Location extends React.Component {
                             <br />
                             <h5>Clothing for the Weather</h5>
                             <br />
-                            <div className="card blue-grey darken-1">
+                            <div className="card green accent-3">
                                 <div className="card-content white-text">
-                                    {/*<h4>{weather_clothing} - {weather_severe}</h4>
-                                    <h5>{weather_summary} - {weather_temperature}&deg;F</h5>*/}
+                                    <h4>{weather_clothing} - {weather_severe}</h4>
+                                    <h5>{weather_summary} <i class="tiny material-icons">arrow_forward</i> {weather_temperature}&deg;F</h5>
                                 </div>
                             </div>
                             <br />
