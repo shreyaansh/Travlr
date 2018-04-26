@@ -36,7 +36,9 @@
                 feedback_table.deleteRow(i);
 
                 // Request to delete feedback from SQL
-
+				var event = new Event('delete-feedback');
+				event.data = feedback_id;
+				document.dispatchEvent(event);
             }
 		</script>
 		

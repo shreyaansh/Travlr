@@ -31,6 +31,15 @@ class DeveloperPage extends React.Component {
     }
 }
 
+// Delete Feedback
+document.addEventListener('delete-feedback', function (e) {
+   console.log("DELETE FEEDBACK EVENT CAPTURED");
+   console.log(e.data);
+   axios.post(constants.routeUrl + 'delete-feedback', {'feedback-id' : e.data}).then(res => {
+      console.log(res);
+   });
+});
+
 function createFeedback(feedback) {
     console.log(feedback);
     var feedback_div = document.getElementById('feedback_div');
