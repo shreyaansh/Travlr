@@ -42,6 +42,10 @@ class Navbar extends React.Component {
 
         axios.post("http://localhost:5000/upload-itin", {pdf}).then(res => {
             console.log(res);
+            if(confirm("Do you want to share you Itinerary on Facebook?")) {
+                window.open("https://www.facebook.com/sharer.php?u=" + res.data.link);
+            }
+
         });
 
         doc.save("YourItinerary.pdf");
@@ -51,7 +55,7 @@ class Navbar extends React.Component {
         // debugger;
         if(this.props.renderer == "itinerary_page" || this.props.renderer == "custom_itin_page") {
             return(
-                <a href="#" onClick={this.createPDF}><i class="material-icons left">file_download</i>Itinerary as PDF</a>
+                <a href="#" onClick={this.createPDF}><i className="material-icons left">file_download</i>Itinerary as PDF</a>
             );
         }
         else {
