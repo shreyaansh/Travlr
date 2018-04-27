@@ -6,7 +6,6 @@ constants/*.pyc
 .idea/
 .DS_Store
 static/package-lock.json
-static/dist/bundle.js
 static/.DS_Store
 static/node_modules
 requirements.txt
