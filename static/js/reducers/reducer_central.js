@@ -98,6 +98,7 @@ function centralReducer(state = initialState, action) {
             }
             state.currentSelection.itinerary[action.city].selectedHotel = action.payload;
             console.log(state.currentSelection.itinerary);
+            console.log('ActionPayload:' + action.payload);
             state.preloader = "done";
             return state;
         

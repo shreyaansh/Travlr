@@ -29,13 +29,19 @@ class Navbar extends React.Component {
         var itin = $("#itinerary");
         var html = "<!DOCTYPE HTML>";
         html += '<html lang="en-us">';
-        html += '<head><style></style></head>';
+        html += '<head><style>';
+        html += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">';
+        html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>';
+        html += '</style></head>';
         html += "<body>";
+        html += '<div style=\"width:200px;\">';
         html += itin.html();
+        html += '</div>';
         html += "</body></html>";
         console.log(html);
 
         var doc = new jsPDF('l', 'mm', [297, 210]);
+        doc.setLineWidth(100);
         doc.fromHTML(html);
         doc.save("YourItinerary.pdf");
     }
