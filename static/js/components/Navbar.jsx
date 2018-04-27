@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
@@ -33,10 +34,16 @@ class Navbar extends React.Component {
         html += "<body>";
         html += itin.html();
         html += "</body></html>";
-        console.log(html);
 
         var doc = new jsPDF('l', 'mm', [297, 210]);
         doc.fromHTML(html);
+
+        var pdf = doc.output();
+
+        axios.post("http://localhost:5000/upload-itin", {pdf}).then(res => {
+            console.log(res);
+        });
+
         doc.save("YourItinerary.pdf");
     }
 
