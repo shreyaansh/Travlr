@@ -48,7 +48,7 @@ class Location extends React.Component {
                             <br />
                             <h5>Clothing for the Weather</h5>
                             <br />
-                            <div className="card green accent-3">
+                            <div className="card teal lighten-2">
                                 <div className="card-content white-text">
                                     <h4>{weather_clothing} - {weather_severe}</h4>
                                     <h5>{weather_summary} <i class="tiny material-icons">arrow_forward</i> {weather_temperature}&deg;F</h5>
