@@ -9,7 +9,7 @@ import constants from '../../../constants/constants';
 import viewItin from '../actions/action_my_itineraries';
 
 class Navbar extends React.Component {
-    
+
     constructor (props) {
         super(props);
         console.log(this.props.navProps.nameHandler);
@@ -41,7 +41,7 @@ class Navbar extends React.Component {
 
         var pdf = doc.output();
 
-        axios.post("http://localhost:5000/upload-itin", {pdf}).then(res => {
+        axios.post("https://travlr-io.herokuapp.com/upload-itin", {pdf}).then(res => {
             console.log(res);
             if(confirm("Do you want to share you Itinerary on Facebook?")) {
                 window.open("https://www.facebook.com/sharer.php?u=" + res.data.link);
@@ -96,7 +96,7 @@ class Navbar extends React.Component {
                                         />
                                     }
                                 </li>
-                                
+
                             </ul>
                         </div>
                     </nav>
@@ -122,7 +122,7 @@ class Navbar extends React.Component {
                                 />
                             }
                         </li>
-                        
+
                     </ul>
                 </div>
             </div>
