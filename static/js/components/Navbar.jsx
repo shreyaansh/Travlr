@@ -26,7 +26,7 @@ class Navbar extends React.Component {
     createPDF() {
 
         // Load DOC
-        var itin = $("#itinerary");
+/*        var itin = $("#itinerary");
         var html = "<!DOCTYPE HTML>";
         html += '<html lang="en-us">';
         html += '<head><style>';
@@ -43,7 +43,47 @@ class Navbar extends React.Component {
         var doc = new jsPDF('l', 'mm', [297, 210]);
         doc.setLineWidth(100);
         doc.fromHTML(html);
-        doc.save("YourItinerary.pdf");
+        doc.save("YourItinerary.pdf");*/
+        var doc = new jsPDF();
+        var pl = this.props.currentSelection.itinerary;
+        doc.setFontStyle("bold");
+        doc.text("Your Itinerary:",10,10);
+        var y = 20;
+        var np = false;
+        jQuery.each(pl, function(loc, locs){
+            if(np){
+                doc.addPage();
+                y=10;
+            }
+            np = true;
+            doc.setFontStyle("bold");
+            doc.text(loc.toUpperCase(),10,y);
+            doc.setFontStyle("normal");
+            y+=10;
+            doc.text("Hotel Information:",20,y);
+            y+=10;
+            var hn = locs.selectedHotel.name;
+            doc.text(hn,30,y);
+            y+=10;
+            var ha = locs.selectedHotel.formatted_address;
+            doc.text(ha,40,y);
+            y+=10;
+            var se = locs.selectedEvents;
+            doc.text("Events you are interested in:",20,y);
+            y+=10;
+            jQuery.each(se,function(eid,einf){
+                var et = einf.title;
+                doc.text(et, 30, y);
+                y+=10;
+                var en = einf.venue_name;
+                doc.text(en,40,y);
+                y+=10
+                var est = einf.start_time;
+                doc.text(est,40,y);
+                y+=10;
+            });
+        });
+        doc.save("itin.pdf");
     }
 
     renderPdfDownloadButton() {
