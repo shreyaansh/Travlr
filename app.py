@@ -14,6 +14,7 @@ from geopy.geocoders import Nominatim
 import forecastio
 import simplejson as json
 from sqlalchemy.dialects.postgresql.json import JSON
+import dropbox
 import sys
 from ast import literal_eval
 import urllib.request
@@ -286,7 +287,7 @@ def getItineraries():
     for row in result:
         if row.email not in ItinDict:
             ItinDict[row.email]={}
-        print(row.itinerary)
+        #print(row.itinerary)
         ItinDict[row.email][row.id] =  json.dumps(row.itinerary)
     return jsonify(ItinDict)
 
@@ -309,6 +310,18 @@ def getFeedback():
         FeedbackDict[row.email][row.id] =  str(row.feedbacktext)
     #return jsonify(ret_token)
     return jsonify(FeedbackDict)
+
+@app.route('/upload-itin', methods=['POST'])
+def uploadItinerary():
+    dbx = dropbox.Dropbox('m6hTLFgZa3IAAAAAAAATBAlZ9jB14q37sy2ITRHoQLqfOhMgX0yg5C9AmX5PvKtT')
+
+    with open('requirements.txt', "rb") as f:
+        dbx.files_upload(f.read() , '/requirements.txt', mute=True)
+
+    result = dbx.sharing_create_shared_link('/requirements.txt', short_url=True, pending_upload=None)
+    print(result.url)
+
+    return jsonify({'token': 'SUCCESS'})
 
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
