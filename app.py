@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Flask, render_template, jsonify, request, send_from_directory
 import googlemaps
 import json
@@ -15,6 +16,7 @@ from geopy.geocoders import Nominatim
 from darksky import forecast
 import simplejson as json
 from sqlalchemy.dialects.postgresql.json import JSON
+import dropbox
 import sys
 from ast import literal_eval
 import urllib.request
@@ -326,7 +328,6 @@ def getItineraries():
     for row in result:
         if row.email not in ItinDict:
             ItinDict[row.email]={}
-        print(row.itinerary)
         ItinDict[row.email][row.id] =  json.dumps(row.itinerary)
     return jsonify(ItinDict)
 
@@ -349,6 +350,27 @@ def getFeedback():
         FeedbackDict[row.email][row.id] =  str(row.feedbacktext)
     #return jsonify(ret_token)
     return jsonify(FeedbackDict)
+
+@app.route('/upload-itin', methods=['POST'])
+def uploadItinerary():
+    dbx = dropbox.Dropbox('m6hTLFgZa3IAAAAAAAATBAlZ9jB14q37sy2ITRHoQLqfOhMgX0yg5C9AmX5PvKtT')
+
+    token = request.get_json()
+    pdf_str = token['pdf']
+
+    pdf_name = str(uuid.uuid1()) + '.pdf'
+
+    with open(pdf_name, 'w+') as pdf:
+        pdf.write(pdf_str)
+
+    with open(pdf_name, "rb") as f:
+        dbx.files_upload(f.read() , '/' + pdf_name, mute=True)
+
+    os.remove(pdf_name)
+
+    result = dbx.sharing_create_shared_link('/' + pdf_name, short_url=True, pending_upload=None)
+
+    return jsonify({'link': result.url})
 
 @app.route('/travel-form', methods=['POST'])
 def getTravelData():
