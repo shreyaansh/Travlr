@@ -416,9 +416,7 @@ def getTravelData():
                     thecity = thecity[12:thecity.find(']') - 1]
                     if thecity == start_dest:
                         days = int(city[start_dest])
-                print("EndLoop1-" + start_dest + "-" + str(days))
                 for index in range(0, days):
-                    print(str(iter_date))
                     weatherName = "weather_" + str(index)
                     data[start_dest][weatherName] = {}
                     data[start_dest][weatherName]['date'] = str(iter_date)
@@ -430,7 +428,7 @@ def getTravelData():
                     iter_date += timedelta(days=1)
                 data[start_dest]['stop_no'] = stop_no
                 stop_no += 1
-               
+
                 if not db.session.query(JSONCache).filter(JSONCache.location == start_dest, JSONCache.preference == hotel_pref).count():
                     data[start_dest]['hotels'] = fetch_hotels(hotel_pref, start_dest)
                     clean_fetched_data(data[start_dest]['hotels'],start_dest)
@@ -465,9 +463,7 @@ def getTravelData():
                 thecity = thecity[12:thecity.find(']') - 1]
                 if thecity == start_dest:
                     days = int(city[start_dest])
-            print("EndLoop2-" + start_dest + "-" + str(days))
             for index in range(0, days):
-                print(str(iter_date))
                 weatherName = "weather_" + str(index)
                 data[start_dest][weatherName] = {}
                 data[start_dest][weatherName]['date'] = str(iter_date)
@@ -510,9 +506,7 @@ def getTravelData():
             thecity = thecity[12:thecity.find(']') - 1]
             if thecity == start_dest:
                 days = int(city[start_dest])
-        print("EndLoop3-" + start_dest + "-" + str(days))
         for index in range(0, days):
-            print(str(iter_date))
             weatherName = "weather_" + str(index)
             data[start_dest][weatherName] = {}
             data[start_dest][weatherName]['date'] = str(iter_date)
@@ -553,9 +547,8 @@ def getTravelData():
         thecity = thecity[12:thecity.find(']') - 1]
         if thecity == end_dest:
             days = int(city[end_dest])
-    print("EndLoop4-" + end_dest + "-" + str(days))
+
     for index in range(0, days):
-        print(str(iter_date))
         weatherName = "weather_" + str(index)
         data[end_dest][weatherName] = {}
         data[end_dest][weatherName]['date'] = str(iter_date)
