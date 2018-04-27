@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import constants from '../../../constants/constants';
 
 import viewItin from '../actions/action_my_itineraries';
 
@@ -71,7 +72,7 @@ class Navbar extends React.Component {
                 <div className="navbar-fixed">
                     <nav className="black">
                         <div className="nav-wrapper">
-                            <a href="#" className="brand-logo"><img id="nav_logo" src="/assets/travlr_logo_white.png"/></a>
+                            <a href={constants.routeUrl} className="brand-logo"><img id="nav_logo" src="/assets/travlr_logo_white.png"/></a>
                             <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i
                                 className="material-icons">menu</i></a>
                             <ul className="right hide-on-med-and-down">

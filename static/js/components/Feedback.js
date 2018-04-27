@@ -18,11 +18,15 @@ const Feedback = (props) => {
                 </div>
                 <div className="modal-footer">
                     <a onClick={getFeedbackData} className="modal-action modal-close waves-effect waves-green btn-flat">Send</a>
-                    <a href="#" className="modal-close waves-effect waves-green btn-flat">Close</a>
+                    <a onClick={closeFeedback} className="modal-close waves-effect waves-green btn-flat">Close</a>
                 </div>
             </div>
         </div>
     );
+}
+
+function closeFeedback() {
+    document.getElementById('feedback_input').value = "";
 }
 
 function getFeedbackData() {
@@ -38,6 +42,7 @@ function getFeedbackData() {
     else {
         console.log('FEEDBACK: No user signed in!')
     }
+    document.getElementById('feedback_input').value = "";
 }
 
 export default Feedback;

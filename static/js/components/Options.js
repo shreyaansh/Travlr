@@ -47,7 +47,9 @@ class Options extends React.Component {
                 <h2 id="opt_tile">Let's make your Itinerary.</h2>
                 {locations.map((location) => <Location key={location} location_name={location}/>)}
 
-                <a className="btn green" onClick={this.onGenerateClick}>Generate Itinerary</a>
+                <center><a className="btn green" onClick={this.onGenerateClick}>Generate Itinerary</a></center>
+                <br />
+                <br />
             </div>
         );
     }
